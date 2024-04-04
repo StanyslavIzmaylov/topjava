@@ -23,9 +23,11 @@
     </tr>
     </thead>
     <tbody>
-    <jsp:useBean id="mealServlet"  class="ru.javawebinar.topjava.web.MealServlet"/>
-    <c:set var="meals" value="${mealServlet.mealToList}" />
-    <c:forEach items="${meals}" var="usermeal" >
+
+
+
+    <jsp:useBean id="meals" scope="request" type="java.util.List"/>
+    <c:forEach  var="usermeal" items="${meals}" >
         <tr style="background-color:${usermeal.excess ? 'red' : 'greenyellow'}">
             <td>  <fmt:parseDate value="${usermeal.dateTime }" pattern="yyyy-MM-dd'T'HH:mm" var="parsedDateTime" type="both" />
                   <fmt:formatDate pattern="dd.MM.yyyy HH:mm" value="${ parsedDateTime }" /></td>
