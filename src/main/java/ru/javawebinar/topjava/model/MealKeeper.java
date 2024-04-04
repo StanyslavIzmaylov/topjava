@@ -23,18 +23,4 @@ public class MealKeeper {
     public List<Meal> getAllMeals() {
         return this.meals;
     }
-    public List<MealTo> mealToList(List<Meal> meals) {
-        this.meals = meals;
-        Map<LocalDate, Integer> caloriesSumByDate = meals.stream()
-                .collect(
-                        Collectors.groupingBy(Meal::getDate, Collectors.summingInt(Meal::getCalories))
-                );
-        return meals.stream()
-                .map(meal -> createTo(meal, caloriesSumByDate.get(meal.getDate()) > caloriesPerDay))
-                .collect(Collectors.toList());
-    }
-
-    public static MealTo createTo(Meal meal, boolean excess) {
-        return new MealTo(meal.getDateTime(), meal.getDescription(), meal.getCalories(), excess);
-    }
 }
