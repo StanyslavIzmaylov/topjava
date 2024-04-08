@@ -1,20 +1,16 @@
 package ru.javawebinar.topjava.model;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-public class MealKeeper {
+public class MealKeeper implements KeeperMeal{
     public static final int caloriesPerDay = 2000;
     private List<Meal> meals;
 
     public MealKeeper() {
-        this.meals = new ArrayList<>();
+        this.meals = new CopyOnWriteArrayList<>();
         meals.add(new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0), "Завтрак", 500));
         meals.add(new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 13, 0), "Обед", 1000));
         meals.add(new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 20, 0), "Ужин", 500));
@@ -24,10 +20,12 @@ public class MealKeeper {
         meals.add(new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 20, 0), "Ужин", 410));
 
     }
-    public void addMeal(Meal meal){
+    @Override
+    public void add(Meal meal){
         meals.add(meal);
     }
-    public void updateMeal(LocalDateTime dateTime,String description,int calories, int id){
+    @Override
+    public void update(LocalDateTime dateTime, String description, int calories, int id){
         for (Meal meal : meals){
             if(meal.getMealId() == id){
                 meal.setDateTime(dateTime);
@@ -36,11 +34,21 @@ public class MealKeeper {
             }
         }
     }
-    public void deletMeal(int id) {
+    @Override
+    public Meal select(int id){
+        for (Meal meal : meals){
+            if (meal.getMealId() == id){
+                return meal;
+            }
+        }
+        return null;
+    }
+    @Override
+    public void delete(int id) {
         meals.removeIf(meal -> meal.getMealId() == id);
     }
-
-    public List<Meal> getAllMeals() {
+    @Override
+    public List<Meal> getAll() {
         return this.meals;
     }
 }

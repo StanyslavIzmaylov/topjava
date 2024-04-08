@@ -37,7 +37,7 @@
             <td>
                 <a href="update?mealToId=<c:out value='${usermeal.mealToId}' />">Update</a>
                 &nbsp;&nbsp;&nbsp;&nbsp;
-                <a href="delete?mealToId=<c:out value='${usermeal.mealToId}' />">Delete</a>
+                <a href="/meals/delete?mealToId=<c:out value='${usermeal.mealToId}' />">Delete</a>
             </td>
         </tr>
     </c:forEach>
