@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class MealKeeperMemory implements Keeper {
-    private int uniqueId = 1;
+
     private List<Meal> meals;
 
     public MealKeeperMemory() {
@@ -42,9 +42,7 @@ public class MealKeeperMemory implements Keeper {
         }
         return null;
     }
-    public synchronized int getUniqueId(){
-        return uniqueId++;
-    }
+
     @Override
     public void delete(int id) {
         meals.removeIf(meal -> meal.getId() == id);
