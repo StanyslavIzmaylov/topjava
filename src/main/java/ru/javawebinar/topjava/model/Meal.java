@@ -55,6 +55,6 @@ public class Meal {
         return id;
     }
     public int uniqID(){
-        return uniqId.decrementAndGet();
+        return uniqId.getAndIncrement();
     }
 }
