@@ -1,11 +1,4 @@
 
-<%--
-  Created by IntelliJ IDEA.
-  User: User113
-  Date: 02.04.2024
-  Time: 10:11
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -35,9 +28,9 @@
             <td> ${usermeal.description} </td>
             <td> ${usermeal.calories} </td>
             <td>
-                <a href="update?mealToId=<c:out value='${usermeal.mealToId}' />">Update</a>
+                <a href="meals?action=update&id=${usermeal.id}">Update</a>
                 &nbsp;&nbsp;&nbsp;&nbsp;
-                <a href="/meals/delete?mealToId=<c:out value='${usermeal.mealToId}' />">Delete</a>
+                <a href="meals?action=delete&id=${usermeal.id}">Delete</a>
             </td>
         </tr>
     </c:forEach>

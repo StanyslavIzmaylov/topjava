@@ -12,10 +12,10 @@
     <title>Update meal Meal </title>
 </head>
 <body>
-<form action='editmeal' method="post">
+<form action='meals?action=editmeal' method="post">
     <label> MEAL ID     : </label>
     <input type="text" value=
-            "${meal.mealId}" readonly="readonly" name="mealToId"/><br/>
+            "${meal.id}" readonly="readonly" name="id"/><br/>
     <label> Data Time   :</label> <input type="datetime-local" value=
         "${meal.dateTime}" name="dataTime"/><br/>
     <label> Description :</label> <input type=" text" value=
