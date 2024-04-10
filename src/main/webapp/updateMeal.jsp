@@ -1,10 +1,4 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: User113
-  Date: 08.04.2024
-  Time: 9:40
-  To change this template use File | Settings | File Templates.
---%>
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
@@ -13,8 +7,7 @@
 </head>
 <body>
 <form action='meals?action=editmeal' method="post">
-    <label> MEAL ID     : </label>
-    <input type="text" value=
+    <input type="hidden" value=
             "${meal.id}" readonly="readonly" name="id"/><br/>
     <label> Data Time   :</label> <input type="datetime-local" value=
         "${meal.dateTime}" name="dataTime"/><br/>
