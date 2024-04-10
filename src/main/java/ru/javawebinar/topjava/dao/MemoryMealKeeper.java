@@ -3,7 +3,6 @@ package ru.javawebinar.topjava.dao;
 import ru.javawebinar.topjava.model.Meal;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -40,9 +39,7 @@ public class MemoryMealKeeper implements KeeperMeal {
 
     @Override
     public List<Meal> getAll() {
-        List<Meal> mealList = new ArrayList<>();
-        mealList.addAll(meals.values());
-        return mealList;
+        return new ArrayList<>(meals.values());
     }
 
     private int uniqID() {

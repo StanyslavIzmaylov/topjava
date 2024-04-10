@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -23,20 +22,20 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 
 public class MealServlet extends HttpServlet {
-    private static final Integer serialVersionUID = null;
+
     private static final Logger log = getLogger(MealServlet.class);
 
     private KeeperMeal mealKeeperMemory;
 
     public void init() {
         this.mealKeeperMemory = new MemoryMealKeeper();
-            mealKeeperMemory.add(new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0), "Завтрак", 500));
-            mealKeeperMemory.add(new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 13, 0), "Обед", 1000));
-            mealKeeperMemory.add(new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 20, 0), "Ужин", 500));
-            mealKeeperMemory.add(new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 0, 0), "Еда на граничное значение", 100));
-            mealKeeperMemory.add(new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 10, 0), "Завтрак", 1000));
-            mealKeeperMemory.add(new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 13, 0), "Обед", 500));
-            mealKeeperMemory.add(new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 20, 0), "Ужин", 410));
+        mealKeeperMemory.add(new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0), "Завтрак", 500));
+        mealKeeperMemory.add(new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 13, 0), "Обед", 1000));
+        mealKeeperMemory.add(new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 20, 0), "Ужин", 500));
+        mealKeeperMemory.add(new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 0, 0), "Еда на граничное значение", 100));
+        mealKeeperMemory.add(new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 10, 0), "Завтрак", 1000));
+        mealKeeperMemory.add(new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 13, 0), "Обед", 500));
+        mealKeeperMemory.add(new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 20, 0), "Ужин", 410));
     }
 
     @Override
@@ -46,7 +45,7 @@ public class MealServlet extends HttpServlet {
 
         if (action == null) {
             log.debug("open meals");
-            List<MealTo> meals = MealsUtil.filteredByStreams(mealKeeperMemory.getAll(),null,null,MealsUtil.CALORIESPERDAY);
+            List<MealTo> meals = MealsUtil.filteredByStreams(mealKeeperMemory.getAll(), null, null, MealsUtil.CALORIESPERDAY);
             req.setAttribute("meals", meals);
             req.getRequestDispatcher("/meals.jsp").forward(req, resp);
         } else if (action.equalsIgnoreCase("delete")) {
@@ -65,16 +64,11 @@ public class MealServlet extends HttpServlet {
             log.debug("add object");
             addMeal(req, resp);
         }
-
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         doGet(req, resp);
-    }
-
-    public void showForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher("addMeal.jsp").forward(req, resp);
     }
 
     public void showUpdateForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -95,7 +89,6 @@ public class MealServlet extends HttpServlet {
     }
 
     public void updateMeal(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        int id = Integer.parseInt(req.getParameter("id"));
         DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
         LocalDateTime localDateTime = LocalDateTime.parse(req.getParameter("dataTime"), format);
         String description = req.getParameter("description");
