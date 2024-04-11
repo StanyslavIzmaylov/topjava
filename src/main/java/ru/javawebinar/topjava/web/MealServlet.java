@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.Month;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 
@@ -46,14 +45,11 @@ public class MealServlet extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setCharacterEncoding("UTF-8");
         String action = req.getParameter("action");
 
         if (action == null) {
             log.debug("open meals");
-            List<MealTo> meals = MealsUtil.filteredByStreams(mealKeeperMemory.getAll(), null, null, MealsUtil.CALORIES_PER_DAY);
-            req.setAttribute("meals", meals);
-            req.getRequestDispatcher("/meals.jsp").forward(req, resp);
+            showMeals(req,resp);
         } else if (action.equalsIgnoreCase("delete")) {
             log.debug("redirect to delete");
             int id = Integer.parseInt(req.getParameter("id"));
@@ -66,22 +62,35 @@ public class MealServlet extends HttpServlet {
         } else if (action.equalsIgnoreCase("new")) {
             log.debug("show new form");
             showNewForm(req, resp);
+        } else {
+            log.debug("open meals");
+            showMeals(req,resp);
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         req.setCharacterEncoding("UTF-8");
-        String action = req.getParameter("action");
-        if (action.equalsIgnoreCase("editmeal")) {
-            log.debug("update object");
-            updateMeal(req, resp);
-        } else if (action.equalsIgnoreCase("addmeal")) {
-            log.debug("add object");
-            addMeal(req, resp);
+        LocalDateTime localDateTime = LocalDateTime.parse(req.getParameter("dataTime"));
+        String description = req.getParameter("description");
+        int calories = Integer.parseInt(req.getParameter("calories"));
+        Meal meal = new Meal(localDateTime, description, calories);
+        String stringId = req.getParameter("id");
+        if(stringId == null || stringId.isEmpty()){
+            mealKeeperMemory.add(meal);
+            resp.sendRedirect("meals");
+        } else {
+        int id = Integer.parseInt(req.getParameter("id"));
+        meal.setId(id);
+        mealKeeperMemory.update(meal);
+        resp.sendRedirect("meals");
         }
     }
-
+    public void showMeals(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        List<MealTo> meals = MealsUtil.mealToMeal(mealKeeperMemory.getAll(), MealsUtil.CALORIES_PER_DAY);
+        req.setAttribute("meals", meals);
+        req.getRequestDispatcher("/meals.jsp").forward(req, resp);
+    }
     public void showUpdateForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int id = Integer.parseInt(req.getParameter("id"));
         Meal mealGetToId = mealKeeperMemory.get(id);
@@ -91,24 +100,5 @@ public class MealServlet extends HttpServlet {
 
     public void showNewForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.getRequestDispatcher("addMeal.jsp").forward(req, resp);
-    }
-
-    public void addMeal(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        LocalDateTime localDateTime = LocalDateTime.parse(req.getParameter("dataTime"),
-                DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm"));
-        String description = req.getParameter("description");
-        int calories = Integer.parseInt(req.getParameter("calories"));
-        Meal meal = new Meal(localDateTime, description, calories);
-        mealKeeperMemory.add(meal);
-        resp.sendRedirect("meals");
-    }
-
-    public void updateMeal(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        LocalDateTime localDateTime = LocalDateTime.parse(req.getParameter("dataTime"), DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm"));
-        String description = req.getParameter("description");
-        int calories = Integer.parseInt(req.getParameter("calories"));
-        Meal meal = new Meal(localDateTime, description, calories);
-        mealKeeperMemory.update(meal);
-        resp.sendRedirect("meals");
     }
 }

@@ -7,6 +7,8 @@
 </head>
 <body>
 <form  action='meals?action=addmeal' method="post">
+    <input type="hidden" value=
+            "${meal.id}" readonly="readonly" name="id"/><br/>
     Data Time   : <input type="datetime-local"  name="dataTime"/><br/>
     Description : <input type="text"  name="description"/><br/>
     Calories    : <input type="text"  name="calories"/><br/>

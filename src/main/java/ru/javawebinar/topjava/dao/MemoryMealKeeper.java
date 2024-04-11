@@ -1,7 +1,6 @@
 package ru.javawebinar.topjava.dao;
 
 import ru.javawebinar.topjava.model.Meal;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -20,10 +19,17 @@ public class MemoryMealKeeper implements MealKeeper {
         return meal;
     }
 
+    private int uniqueId() {
+        return uniqueId.getAndIncrement();
+    }
+
     @Override
     public Meal update(Meal meal) {
-        if (meals.containsKey(meal.getId())) {
-            return meals.replace(meal.getId(), meal);
+        synchronized (this) {
+            if (meals.containsKey(meal.getId())) {
+                meals.replace(meal.getId(), meal);
+                return meal;
+            }
         }
         return null;
     }
@@ -41,9 +47,5 @@ public class MemoryMealKeeper implements MealKeeper {
     @Override
     public List<Meal> getAll() {
         return new ArrayList<>(meals.values());
-    }
-
-    private int uniqueId() {
-        return uniqueId.getAndIncrement();
     }
 }
