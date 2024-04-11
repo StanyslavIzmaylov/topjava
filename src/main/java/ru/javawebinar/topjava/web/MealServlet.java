@@ -100,7 +100,7 @@ public class MealServlet extends HttpServlet {
         int calories = Integer.parseInt(req.getParameter("calories"));
         Meal meal = new Meal(localDateTime, description, calories);
         mealKeeperMemory.add(meal);
-        resp.sendRedirect("/topjava/meals");
+        resp.sendRedirect("meals");
     }
 
     public void updateMeal(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -109,6 +109,6 @@ public class MealServlet extends HttpServlet {
         int calories = Integer.parseInt(req.getParameter("calories"));
         Meal meal = new Meal(localDateTime, description, calories);
         mealKeeperMemory.update(meal);
-        resp.sendRedirect("/topjava/meals");
+        resp.sendRedirect("meals");
     }
 }
