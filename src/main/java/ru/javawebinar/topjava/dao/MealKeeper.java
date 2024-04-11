@@ -4,7 +4,7 @@ import ru.javawebinar.topjava.model.Meal;
 
 import java.util.List;
 
-public interface KeeperMeal {
+public interface MealKeeper {
 
     Meal add(Meal meal);
 

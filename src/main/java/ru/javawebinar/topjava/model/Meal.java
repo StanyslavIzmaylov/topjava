@@ -6,7 +6,7 @@ import java.time.LocalTime;
 
 
 public class Meal {
-    private int id;
+    private int id = 0;
     private LocalDateTime dateTime;
     private String description;
     private int calories;
@@ -53,7 +53,7 @@ public class Meal {
         return id;
     }
 
-    public synchronized void setId(int id) {
+    public void setId(int id) {
         this.id = id;
     }
 }

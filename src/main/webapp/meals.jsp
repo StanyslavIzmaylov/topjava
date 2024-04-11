@@ -9,7 +9,7 @@
 <body>
     <h1>Meal List</h1>
     <h2>
-        <a href="addMeal.jsp">Add New Meal</a>
+        <a href="meals?action=new">Add New Meal</a>
     </h2>
 <table border=1>
     <thead>

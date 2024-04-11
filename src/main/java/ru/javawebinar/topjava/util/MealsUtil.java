@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class MealsUtil {
-    public static final int CALORIESPERDAY = 2000;
+    public static final int CALORIES_PER_DAY = 2000;
 
     public static List<MealTo> filteredByStreams(List<Meal> meals, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
         Map<LocalDate, Integer> caloriesSumByDate = meals.stream()
@@ -18,14 +18,14 @@ public class MealsUtil {
                         Collectors.groupingBy(Meal::getDate, Collectors.summingInt(Meal::getCalories))
 //                      Collectors.toMap(Meal::getDate, Meal::getCalories, Integer::sum)
                 );
-        if (startTime == null && endTime == null) {
+        if (startTime == null || endTime == null) {
             return meals.stream()
-                    .map(meal -> createTo(meal, caloriesSumByDate.get(meal.getDate()) > CALORIESPERDAY))
+                    .map(meal -> createTo(meal, caloriesSumByDate.get(meal.getDate()) > CALORIES_PER_DAY))
                     .collect(Collectors.toList());
         } else
             return meals.stream()
                     .filter(meal -> TimeUtil.isBetweenHalfOpen(meal.getTime(), startTime, endTime))
-                    .map(meal -> createTo(meal, caloriesSumByDate.get(meal.getDate()) > CALORIESPERDAY))
+                    .map(meal -> createTo(meal, caloriesSumByDate.get(meal.getDate()) > CALORIES_PER_DAY))
                     .collect(Collectors.toList());
     }
 
