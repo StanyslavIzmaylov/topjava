@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.Month;
 import java.util.Arrays;
 import java.util.List;
@@ -44,12 +45,12 @@ public class MealServlet extends HttpServlet {
     }
 
     @Override
-    public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter("action");
 
         if (action == null) {
             log.debug("open meals");
-            showMeals(req,resp);
+            showMeals(req, resp);
         } else if (action.equalsIgnoreCase("delete")) {
             log.debug("redirect to delete");
             int id = Integer.parseInt(req.getParameter("id"));
@@ -64,8 +65,26 @@ public class MealServlet extends HttpServlet {
             showNewForm(req, resp);
         } else {
             log.debug("open meals");
-            showMeals(req,resp);
+            showMeals(req, resp);
         }
+    }
+
+    private void showMeals(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        List<MealTo> meals = MealsUtil.filteredByStreams(mealKeeperMemory.getAll(),
+                LocalTime.MIN, LocalTime.MAX, MealsUtil.CALORIES_PER_DAY);
+        req.setAttribute("meals", meals);
+        req.getRequestDispatcher("/meals.jsp").forward(req, resp);
+    }
+
+    private void showUpdateForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        int id = Integer.parseInt(req.getParameter("id"));
+        Meal mealGetToId = mealKeeperMemory.get(id);
+        req.setAttribute("meal", mealGetToId);
+        req.getRequestDispatcher("updateMeal.jsp").forward(req, resp);
+    }
+
+    private void showNewForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.getRequestDispatcher("addMeal.jsp").forward(req, resp);
     }
 
     @Override
@@ -76,29 +95,14 @@ public class MealServlet extends HttpServlet {
         int calories = Integer.parseInt(req.getParameter("calories"));
         Meal meal = new Meal(localDateTime, description, calories);
         String stringId = req.getParameter("id");
-        if(stringId == null || stringId.isEmpty()){
+        if (stringId == null || stringId.isEmpty()) {
             mealKeeperMemory.add(meal);
             resp.sendRedirect("meals");
         } else {
-        int id = Integer.parseInt(req.getParameter("id"));
-        meal.setId(id);
-        mealKeeperMemory.update(meal);
-        resp.sendRedirect("meals");
+            int id = Integer.parseInt(req.getParameter("id"));
+            meal.setId(id);
+            mealKeeperMemory.update(meal);
+            resp.sendRedirect("meals");
         }
-    }
-    public void showMeals(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<MealTo> meals = MealsUtil.mealToMeal(mealKeeperMemory.getAll(), MealsUtil.CALORIES_PER_DAY);
-        req.setAttribute("meals", meals);
-        req.getRequestDispatcher("/meals.jsp").forward(req, resp);
-    }
-    public void showUpdateForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        int id = Integer.parseInt(req.getParameter("id"));
-        Meal mealGetToId = mealKeeperMemory.get(id);
-        req.setAttribute("meal", mealGetToId);
-        req.getRequestDispatcher("updateMeal.jsp").forward(req, resp);
-    }
-
-    public void showNewForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher("addMeal.jsp").forward(req, resp);
     }
 }
