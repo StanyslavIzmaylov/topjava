@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
 import java.util.Objects;
 
 public class MealServlet extends HttpServlet {
@@ -31,9 +30,20 @@ public class MealServlet extends HttpServlet {
     public void init() {
         repositoryMeal = new InMemoryMealRepository();
         repositoryUser = new InMemoryUserRepository();
-        User user = new User(null,"test","t@t.ru","ttt");
+        User user = new User(null, "test", "t@t.ru", "ttt");
+        User user1 = new User(null, "user2", "t@t.ru", "rrr");
         repositoryUser.save(user);
-        repositoryMeal.save(user, new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0), "Завтрак", 500));
+        repositoryUser.save(user1);
+        repositoryMeal.save(user.getId(), new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0), "Завтрак", 500));
+        repositoryMeal.save(user.getId(), new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 13, 0), "Обед", 1000));
+        repositoryMeal.save(user.getId(), new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 20, 0), "Ужин", 500));
+        repositoryMeal.save(user.getId(), new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 0, 0), "Еда на граничное значение", 100));
+        repositoryMeal.save(user.getId(), new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 10, 0), "Завтрак", 1000));
+        repositoryMeal.save(user.getId(), new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 13, 0), "Обед", 500));
+        repositoryMeal.save(user.getId(), new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 20, 0), "Ужин", 410));
+        repositoryMeal.save(user1.getId(), new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 10, 0), "Завтрак", 1000));
+        repositoryMeal.save(user1.getId(), new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 13, 0), "Обед", 500));
+        repositoryMeal.save(user1.getId(), new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 20, 0), "Ужин", 410));
     }
 
     @Override
@@ -46,27 +56,25 @@ public class MealServlet extends HttpServlet {
                 Integer.parseInt(request.getParameter("calories")));
 
         log.info(meal.isNew() ? "Create {}" : "Update {}", meal);
-        repositoryMeal.save( repositoryUser.get(1),meal);
+        repositoryMeal.save(repositoryUser.get(1).getId(), meal);
         response.sendRedirect("meals");
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
-        User user = repositoryUser.get(1);
         switch (action == null ? "all" : action) {
             case "delete":
                 int id = getId(request);
-                Meal meal1 = repositoryMeal.get(user,id);
                 log.info("Delete id={}", id);
-                repositoryMeal.delete(meal1);
+                repositoryMeal.delete(1, id);
                 response.sendRedirect("meals");
                 break;
             case "create":
             case "update":
                 final Meal meal = "create".equals(action) ?
                         new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000) :
-                        repositoryMeal.get(user,getId(request));
+                        repositoryMeal.get(1, getId(request));
                 request.setAttribute("meal", meal);
                 request.getRequestDispatcher("/mealForm.jsp").forward(request, response);
                 break;
@@ -74,7 +82,7 @@ public class MealServlet extends HttpServlet {
             default:
                 log.info("getAll");
                 request.setAttribute("meals",
-                        MealsUtil.getTos(repositoryMeal.getAll(), MealsUtil.DEFAULT_CALORIES_PER_DAY));
+                        MealsUtil.getTos(repositoryMeal.getAll(1), MealsUtil.DEFAULT_CALORIES_PER_DAY));
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
         }

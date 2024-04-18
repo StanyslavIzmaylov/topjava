@@ -2,7 +2,6 @@ package ru.javawebinar.topjava.repository.inmemory;
 
 import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.MealRepository;
 
 import java.util.*;
@@ -11,44 +10,45 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Repository
 public class InMemoryMealRepository implements MealRepository {
-    private final Map<Integer, List<Meal>> repository = new ConcurrentHashMap<>();
+    private final Map<Integer, Map<Integer, Meal>> repository = new ConcurrentHashMap<>();
     private final AtomicInteger counter = new AtomicInteger(0);
 
     @Override
-    public Meal save(User user, Meal meal) {
+    public Meal save(int id, Meal meal) {
+        meal.setUserId(id);
         if (meal.isNew()) {
             meal.setId(counter.incrementAndGet());
-            meal.setUserId(user.getId());
-            repository.computeIfAbsent(user.getId(), k -> new ArrayList<>()).add(meal);
+            repository.computeIfAbsent(id, k -> new HashMap<>()).put(meal.getId(), meal);
             return meal;
         }
         // handle case: update, but not present in storage
-        repository.computeIfPresent(user.getId(), (k, v) -> new ArrayList<>()).add(meal);
-        return meal;
+        if (id == meal.getUserId()) {
+            repository.get(id).computeIfPresent(meal.getId(), (k, v) -> meal);
+            return meal;
+        } else return null;
     }
 
     @Override
-    public boolean delete(Meal meal) {
-        return repository.get(meal.getUserId()).remove(meal);
-    }
-
-    @Override
-    public Meal get(User user, Integer id) {
-        for (Meal meal : repository.get(user.getId())) {
-            if (meal.getId().equals(id)) {
-                return meal;
-            }
+    public boolean delete(int userId, int id) {
+        if (userId == repository.get(userId).get(id).getUserId()) {
+            return repository.get(userId).remove(id) != null;
         }
-        return null;
+        return false;
+    }
+
+    public Meal get(int userId, int id) {
+        if (userId == repository.get(userId).get(id).getUserId()) {
+            return repository.get(userId).get(id);
+        } else return null;
     }
 
     @Override
-    public Collection<Meal> getAll() {
+    public List<Meal> getAll(int userId) {
         List<Meal> meals = new ArrayList<>();
-        for (List<Meal> temp : repository.values()) {
-            meals.addAll(temp);
+        for (Map.Entry<Integer, Meal> entry : repository.get(userId).entrySet()) {
+            meals.add(entry.getValue());
         }
-        Collections.sort(meals, new Comparator<Meal>() {
+        meals.sort(new Comparator<Meal>() {
             @Override
             public int compare(Meal o1, Meal o2) {
 
