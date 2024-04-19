@@ -14,30 +14,26 @@ public class InMemoryMealRepository implements MealRepository {
     private final AtomicInteger counter = new AtomicInteger(0);
 
     @Override
-    public Meal save(int id, Meal meal) {
-        meal.setUserId(id);
+    public Meal save(int userId, Meal meal) {
+        meal.setUserId(userId);
         if (meal.isNew()) {
             meal.setId(counter.incrementAndGet());
-            repository.computeIfAbsent(id, k -> new HashMap<>()).put(meal.getId(), meal);
+            repository.computeIfAbsent(userId, k -> new HashMap<>()).put(meal.getId(), meal);
             return meal;
         }
         // handle case: update, but not present in storage
-        if (id == meal.getUserId()) {
-            repository.get(id).computeIfPresent(meal.getId(), (k, v) -> meal);
-            return meal;
-        } else return null;
+        return repository.get(userId).computeIfPresent(meal.getId(), (k, v) -> meal);
     }
 
     @Override
     public boolean delete(int userId, int id) {
-        if (userId == repository.get(userId).get(id).getUserId()) {
+        if (!repository.get(userId).isEmpty()) {
             return repository.get(userId).remove(id) != null;
-        }
-        return false;
+        } else return false;
     }
 
     public Meal get(int userId, int id) {
-        if (userId == repository.get(userId).get(id).getUserId()) {
+        if (!repository.get(userId).isEmpty()) {
             return repository.get(userId).get(id);
         } else return null;
     }
@@ -45,17 +41,13 @@ public class InMemoryMealRepository implements MealRepository {
     @Override
     public List<Meal> getAll(int userId) {
         List<Meal> meals = new ArrayList<>();
-        for (Map.Entry<Integer, Meal> entry : repository.get(userId).entrySet()) {
-            meals.add(entry.getValue());
-        }
-        meals.sort(new Comparator<Meal>() {
-            @Override
-            public int compare(Meal o1, Meal o2) {
-
-                return o1.getDate().compareTo(o2.getDate());
+        if (!repository.get(userId).isEmpty()) {
+            for (Map.Entry<Integer, Meal> entry : repository.get(userId).entrySet()) {
+                meals.add(entry.getValue());
             }
-        });
-        return meals;
+            meals.sort(Comparator.comparing(Meal::getDate));
+            return meals;
+        } else return meals;
     }
 }
 

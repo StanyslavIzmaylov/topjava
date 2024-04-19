@@ -7,9 +7,11 @@ import org.springframework.stereotype.Controller;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.web.SecurityUtil;
-import java.util.Collection;
+
+import java.util.List;
 
 import static ru.javawebinar.topjava.util.ValidationUtil.assureIdConsistent;
+import static ru.javawebinar.topjava.util.ValidationUtil.checkNew;
 
 @Controller
 public class MealRestController {
@@ -17,11 +19,11 @@ public class MealRestController {
     @Autowired
     private MealService service;
 
-    protected final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     public Meal create(Meal meal) {
         log.info("create {}", meal);
-        assureIdConsistent(meal, meal.getId());
+        checkNew(meal);
         return service.create(SecurityUtil.authUserId(), meal);
     }
 
@@ -35,14 +37,13 @@ public class MealRestController {
         return service.get(SecurityUtil.authUserId(), id);
     }
 
-    public Collection<Meal> getAll(int userId) {
+    public List<Meal> getAll() {
         log.info("getAll");
-        return service.getAll(userId);
+        return service.getAll(SecurityUtil.authUserId());
     }
 
     public Meal update(Meal meal, int mealId) {
         log.info("update {} with id={}", meal, mealId);
-        mealId = meal.getId();
         assureIdConsistent(meal, mealId);
         return service.update(SecurityUtil.authUserId(), meal);
     }
