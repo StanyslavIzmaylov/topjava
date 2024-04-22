@@ -27,27 +27,29 @@ public class InMemoryMealRepository implements MealRepository {
 
     @Override
     public boolean delete(int userId, int id) {
-        if (!repository.get(userId).isEmpty()) {
+        if (repository.get(userId) == null || repository.get(userId).get(id) == null) {
+            return false;
+        } else
             return repository.get(userId).remove(id) != null;
-        } else return false;
     }
 
     public Meal get(int userId, int id) {
-        if (!repository.get(userId).isEmpty()) {
+        if (repository.get(userId) == null || repository.get(userId).get(id) == null) {
+            return null;
+        } else
             return repository.get(userId).get(id);
-        } else return null;
     }
 
     @Override
     public List<Meal> getAll(int userId) {
         List<Meal> meals = new ArrayList<>();
-        if (!repository.get(userId).isEmpty()) {
-            for (Map.Entry<Integer, Meal> entry : repository.get(userId).entrySet()) {
-                meals.add(entry.getValue());
-            }
-            meals.sort(Comparator.comparing(Meal::getDate));
+        if (repository.get(userId) == null) {
             return meals;
-        } else return meals;
+        }
+        meals.addAll(repository.get(userId).values());
+        meals.sort(Comparator.comparing(Meal::getDate));
+        Collections.reverse(meals);
+        return meals;
     }
 }
 
