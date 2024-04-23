@@ -15,11 +15,13 @@ public class InMemoryMealRepository implements MealRepository {
 
     @Override
     public Meal save(int userId, Meal meal) {
-        meal.setUserId(userId);
         if (meal.isNew()) {
             meal.setId(counter.incrementAndGet());
             repository.computeIfAbsent(userId, k -> new HashMap<>()).put(meal.getId(), meal);
             return meal;
+        }
+        if (repository.get(userId) == null) {
+            return null;
         }
         // handle case: update, but not present in storage
         return repository.get(userId).computeIfPresent(meal.getId(), (k, v) -> meal);
@@ -27,17 +29,21 @@ public class InMemoryMealRepository implements MealRepository {
 
     @Override
     public boolean delete(int userId, int id) {
-        if (repository.get(userId) == null || repository.get(userId).get(id) == null) {
+        Map<Integer, Meal> mealMap = repository.get(userId);
+        if (mealMap == null) {
             return false;
-        } else
-            return repository.get(userId).remove(id) != null;
+        } else {
+            return mealMap.remove(id) != null;
+        }
     }
 
     public Meal get(int userId, int id) {
-        if (repository.get(userId) == null || repository.get(userId).get(id) == null) {
+        Map<Integer, Meal> mealMap = repository.get(userId);
+        if (mealMap == null) {
             return null;
-        } else
-            return repository.get(userId).get(id);
+        } else {
+            return mealMap.get(id);
+        }
     }
 
     @Override
@@ -47,8 +53,7 @@ public class InMemoryMealRepository implements MealRepository {
             return meals;
         }
         meals.addAll(repository.get(userId).values());
-        meals.sort(Comparator.comparing(Meal::getDate));
-        Collections.reverse(meals);
+        meals.sort(Comparator.comparing(Meal::getDate).reversed());
         return meals;
     }
 }

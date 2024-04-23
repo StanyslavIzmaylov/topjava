@@ -23,7 +23,16 @@
     <h2>Meals</h2>
     <a href="meals?action=create">Add Meal</a>
     <br><br>
-    <table border="1" cellpadding="8" cellspacing="0">
+        <dt>Date:</dt>
+    <form method="get">
+        <dd><input type="date" name="dateStart" ></dd>
+        <dd><input type="date" name="dateEnd" ></dd>
+    <dt>Time:</dt>
+            <dd><input type="time" name="timeStart" ></dd>
+            <dd><input type="time" name="timeEnd" ></dd>
+            <button type="submit" value="Submit">Save</button>
+        </form>
+        <table border="1" cellpadding="8" cellspacing="0">
         <thead>
         <tr>
             <th>Date</th>
