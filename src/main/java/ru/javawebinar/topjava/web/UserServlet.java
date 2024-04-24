@@ -1,7 +1,6 @@
 package ru.javawebinar.topjava.web;
 
 import org.slf4j.Logger;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +19,6 @@ public class UserServlet extends HttpServlet {
             String userId = request.getParameter("user");
             SecurityUtil.setAuthUserId(Integer.parseInt(userId));
         }
-        request.getRequestDispatcher("/users.jsp").forward(request, response);
+        request.getRequestDispatcher("meals").forward(request, response);
     }
 }

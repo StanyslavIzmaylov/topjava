@@ -6,8 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
+import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.web.SecurityUtil;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static ru.javawebinar.topjava.util.ValidationUtil.assureIdConsistent;
@@ -46,5 +50,42 @@ public class MealRestController {
         log.info("update {} with id={}", meal, mealId);
         assureIdConsistent(meal, mealId);
         return service.update(SecurityUtil.authUserId(), meal);
+    }
+
+    public LocalTime getStartTime(String startTimeParameter) {
+        if (startTimeParameter == null
+                || startTimeParameter.equalsIgnoreCase("")) {
+            return LocalTime.MIN;
+        } else return LocalTime.parse(startTimeParameter);
+    }
+
+    public LocalTime getEndTime(String endTimeParameter) {
+        if (endTimeParameter == null
+                || endTimeParameter.equalsIgnoreCase("")) {
+            return LocalTime.MAX;
+        } else return LocalTime.parse(endTimeParameter);
+    }
+
+    public LocalDate getStartDate(String startDateParameter) {
+        if (startDateParameter == null || startDateParameter.equalsIgnoreCase("")) {
+            return LocalDate.MIN;
+        } else return LocalDate.parse(startDateParameter);
+    }
+
+    public LocalDate getEndDate(String endDateParameter) {
+        if (endDateParameter == null || endDateParameter.equalsIgnoreCase("")) {
+            return LocalDate.MAX.minusDays(1);
+        } else return LocalDate.parse(endDateParameter);
+    }
+
+    public List<Meal> sortData(List<Meal> meals, LocalDate startDate, LocalDate endDate) {
+        List<Meal> sortData = new ArrayList<>();
+        for (Meal meal : meals) {
+            if (meal.getDateTime().isAfter(startDate.atStartOfDay()) &&
+                    meal.getDateTime().isBefore(endDate.atStartOfDay().plusDays(1).minusSeconds(1))) {
+                sortData.add(meal);
+            }
+        }
+        return sortData;
     }
 }

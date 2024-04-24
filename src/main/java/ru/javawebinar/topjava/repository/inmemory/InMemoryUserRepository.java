@@ -10,7 +10,6 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-
 @Repository
 public class InMemoryUserRepository implements UserRepository {
     private static final Logger log = LoggerFactory.getLogger(InMemoryUserRepository.class);
@@ -53,7 +52,7 @@ public class InMemoryUserRepository implements UserRepository {
     @Override
     public User getByEmail(String email) {
         log.info("getByEmail {}", email);
-        return getAll().stream().filter(user1 -> email.equalsIgnoreCase(user1.getEmail()))
+        return getAll().stream().filter(user -> email.equalsIgnoreCase(user.getEmail()))
                 .findAny().orElse(null);
     }
 }

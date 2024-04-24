@@ -17,8 +17,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class MealServlet extends HttpServlet {
@@ -26,14 +24,17 @@ public class MealServlet extends HttpServlet {
 
     private MealRestController mealRestController;
 
+    private ConfigurableApplicationContext appCtx;
+
     @Override
     public void init() {
-        try (ConfigurableApplicationContext appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml")) {
-            mealRestController = appCtx.getBean(MealRestController.class);
-        }
-        for (Meal meal : MealsUtil.meals) {
-            mealRestController.create(meal);
-        }
+        appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml");
+        mealRestController = appCtx.getBean(MealRestController.class);
+    }
+
+    @Override
+    public void destroy() {
+        appCtx.close();
     }
 
     @Override
@@ -71,40 +72,17 @@ public class MealServlet extends HttpServlet {
             case "all":
             default:
                 log.info("getAll");
-                List<Meal> sortData = new ArrayList<>();
-                LocalDate startDate;
-                LocalDate endDate;
-                if (request.getParameter("dateStart") == null || request.getParameter("dateStart").equalsIgnoreCase("")) {
-                    startDate = LocalDate.MIN;
-                } else startDate = LocalDate.parse(request.getParameter("dateStart"));
+                LocalDate startDate = mealRestController.getStartDate(request.getParameter("dateStart"));
+                LocalDate endDate = mealRestController.getEndDate(request.getParameter("dateEnd"));
+                LocalTime startTime = mealRestController.getStartTime(request.getParameter("timeStart"));
+                LocalTime endTime = mealRestController.getEndTime(request.getParameter("timeEnd"));
 
-                if (request.getParameter("dateEnd") == null || request.getParameter("dateEnd").equalsIgnoreCase("")) {
-                    endDate = LocalDate.MAX;
-                } else endDate = LocalDate.parse(request.getParameter("dateEnd"));
-
-                for (Meal meal1 : mealRestController.getAll()) {
-                    if (meal1.getDateTime().isAfter(startDate.atStartOfDay()) && meal1.getDateTime().isBefore(endDate.atStartOfDay().minusSeconds(1))) {
-                        sortData.add(meal1);
-                    }
-                }
-
-                LocalTime startTime;
-                LocalTime endTime;
-                if (request.getParameter("timeStart") == null
-                        || request.getParameter("timeStart").equalsIgnoreCase("")) {
-                    startTime = LocalTime.MIN;
-                } else startTime = LocalTime.parse(request.getParameter("timeStart"));
-                if (request.getParameter("timeEnd") == null
-                        || request.getParameter("timeEnd").equalsIgnoreCase("")) {
-                    endTime = LocalTime.MAX;
-                } else endTime = LocalTime.parse(request.getParameter("timeEnd"));
-
-                request.setAttribute("meals", MealsUtil.getFilteredTos(sortData, MealsUtil.DEFAULT_CALORIES_PER_DAY, startTime, endTime));
+                request.setAttribute("meals", MealsUtil.getFilteredTos(mealRestController.sortData(mealRestController.getAll(), startDate, endDate),
+                        MealsUtil.DEFAULT_CALORIES_PER_DAY, startTime, endTime));
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
         }
     }
-
     private int getId(HttpServletRequest request) {
         String paramId = Objects.requireNonNull(request.getParameter("id"));
         return Integer.parseInt(paramId);

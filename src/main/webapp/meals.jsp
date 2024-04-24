@@ -24,13 +24,13 @@
     <a href="meals?action=create">Add Meal</a>
     <br><br>
         <dt>Date:</dt>
-    <form method="get">
-        <dd><input type="date" name="dateStart" ></dd>
-        <dd><input type="date" name="dateEnd" ></dd>
+    <form method="get" >
+        <dd><input type="date" name="dateStart" value="<%=request.getParameter("dateStart")%>" ></dd>
+        <dd><input type="date" name="dateEnd" value="<%=request.getParameter("dateEnd")%>"></dd>
     <dt>Time:</dt>
-            <dd><input type="time" name="timeStart" ></dd>
-            <dd><input type="time" name="timeEnd" ></dd>
-            <button type="submit" value="Submit">Save</button>
+            <dd><input type="time" name="timeStart" value="<%=request.getParameter("timeStart")%>"></dd>
+            <dd><input type="time" id="end" name="timeEnd" value="<%=request.getParameter("timeEnd")%>"></dd>
+            <button type="submit" >Save</button>
         </form>
         <table border="1" cellpadding="8" cellspacing="0">
         <thead>
