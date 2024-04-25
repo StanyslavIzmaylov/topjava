@@ -51,35 +51,26 @@ public class MealRestController {
         return service.update(SecurityUtil.authUserId(), meal);
     }
 
-    public LocalTime getStartTime(String startTimeParameter) {
+    public List<MealTo> getMealToList(String startDateParameter, String endDateParameter, String startTimeParameter, String endTimeParameter) {
+        LocalTime startTime;
+        LocalTime endTime;
         if (startTimeParameter == null
                 || startTimeParameter.equalsIgnoreCase("")) {
-            return LocalTime.MIN;
-        } else return LocalTime.parse(startTimeParameter);
-    }
-
-    public LocalTime getEndTime(String endTimeParameter) {
+            startTime = LocalTime.MIN;
+        } else startTime = LocalTime.parse(startTimeParameter);
         if (endTimeParameter == null
                 || endTimeParameter.equalsIgnoreCase("")) {
-            return LocalTime.MAX;
-        } else return LocalTime.parse(endTimeParameter);
-    }
-
-    public LocalDate getStartDate(String startDateParameter) {
+            endTime = LocalTime.MAX;
+        } else endTime = LocalTime.parse(endTimeParameter);
+        LocalDate startDate;
+        LocalDate endDate;
         if (startDateParameter == null || startDateParameter.equalsIgnoreCase("")) {
-            return LocalDate.MIN;
-        } else return LocalDate.parse(startDateParameter);
-    }
-
-    public LocalDate getEndDate(String endDateParameter) {
+            startDate = LocalDate.MIN;
+        } else startDate = LocalDate.parse(startDateParameter);
         if (endDateParameter == null || endDateParameter.equalsIgnoreCase("")) {
-            return LocalDate.MAX;
-        } else return LocalDate.parse(endDateParameter);
-    }
-    public List<Meal> sortData(List<Meal> meals, LocalDate startDate, LocalDate endDate){
-        return service.sortData(meals, startDate, endDate);
-    }
-    public List<MealTo> getMealToList(List<Meal> meals, int colorPerDay, LocalTime startTime, LocalTime endTime) {
-        return MealsUtil.getFilteredTos(meals, colorPerDay, startTime, endTime);
+            endDate = LocalDate.MAX;
+        } else endDate = LocalDate.parse(endDateParameter);
+        service.filterData(SecurityUtil.authUserId(),startDate,endDate);
+        return MealsUtil.getFilteredTos(service.filterData(SecurityUtil.authUserId(),startDate,endDate), MealsUtil.DEFAULT_CALORIES_PER_DAY, startTime, endTime);
     }
 }

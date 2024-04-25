@@ -37,7 +37,8 @@ public class MealService {
     public Meal update(int id, Meal meal) {
         return checkNotFoundWithId(repository.save(id, meal), meal.getId());
     }
-    public List<Meal> sortData(List<Meal> meals, LocalDate startDate, LocalDate endDate){
-        return repository.sortData(meals, startDate, endDate);
+
+    public List<Meal> filterData(int userId, LocalDate startDate, LocalDate endDate) {
+        return repository.filterData(userId, startDate, endDate);
     }
 }

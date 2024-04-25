@@ -62,18 +62,19 @@ public class InMemoryMealRepository implements MealRepository {
         return meals;
     }
 
-    public List<Meal> sortData(List<Meal> meals, LocalDate startDate, LocalDate endDate) {
-        List<Meal> sortData = new ArrayList<>();
-        for (Meal meal : meals) {
+    @Override
+    public List<Meal> filterData(int userId, LocalDate startDate, LocalDate endDate) {
+        List<Meal> filterData = new ArrayList<>();
+        for (Meal meal : getAll(userId)) {
             if (meal.getDateTime().isEqual(LocalDateTime.of(startDate, LocalTime.MIN)) |
                     meal.getDateTime().isAfter(LocalDateTime.of(startDate, LocalTime.MIN)) &&
                     meal.getDateTime().isEqual(LocalDateTime.of(endDate, LocalTime.MAX))
                             | meal.getDateTime().isBefore(LocalDateTime.of(endDate, LocalTime.MAX))) {
 
-                sortData.add(meal);
+                filterData.add(meal);
             }
         }
-        return sortData;
+        return filterData;
     }
 }
 
