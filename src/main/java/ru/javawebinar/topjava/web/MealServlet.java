@@ -72,17 +72,16 @@ public class MealServlet extends HttpServlet {
             case "all":
             default:
                 log.info("getAll");
-                LocalDate startDate = mealRestController.getStartDate(request.getParameter("dateStart"));
-                LocalDate endDate = mealRestController.getEndDate(request.getParameter("dateEnd"));
-                LocalTime startTime = mealRestController.getStartTime(request.getParameter("timeStart"));
-                LocalTime endTime = mealRestController.getEndTime(request.getParameter("timeEnd"));
-
-                request.setAttribute("meals", MealsUtil.getFilteredTos(mealRestController.sortData(mealRestController.getAll(), startDate, endDate),
-                        MealsUtil.DEFAULT_CALORIES_PER_DAY, startTime, endTime));
+                request.setAttribute("meals", mealRestController.getMealToList(mealRestController
+                                .sortData(mealRestController.getAll(), mealRestController.getStartDate(request.getParameter("dateStart")),
+                                        mealRestController.getEndDate(request.getParameter("dateEnd")))
+                        , MealsUtil.DEFAULT_CALORIES_PER_DAY, mealRestController.getStartTime(request.getParameter("timeStart")),
+                        mealRestController.getEndTime(request.getParameter("timeEnd"))));
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
         }
     }
+
     private int getId(HttpServletRequest request) {
         String paramId = Objects.requireNonNull(request.getParameter("id"));
         return Integer.parseInt(paramId);

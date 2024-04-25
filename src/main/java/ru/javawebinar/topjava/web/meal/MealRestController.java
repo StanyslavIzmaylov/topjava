@@ -6,12 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
+import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.web.SecurityUtil;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import static ru.javawebinar.topjava.util.ValidationUtil.assureIdConsistent;
@@ -74,18 +73,13 @@ public class MealRestController {
 
     public LocalDate getEndDate(String endDateParameter) {
         if (endDateParameter == null || endDateParameter.equalsIgnoreCase("")) {
-            return LocalDate.MAX.minusDays(1);
+            return LocalDate.MAX;
         } else return LocalDate.parse(endDateParameter);
     }
-
-    public List<Meal> sortData(List<Meal> meals, LocalDate startDate, LocalDate endDate) {
-        List<Meal> sortData = new ArrayList<>();
-        for (Meal meal : meals) {
-            if (meal.getDateTime().isAfter(startDate.atStartOfDay()) &&
-                    meal.getDateTime().isBefore(endDate.atStartOfDay().plusDays(1).minusSeconds(1))) {
-                sortData.add(meal);
-            }
-        }
-        return sortData;
+    public List<Meal> sortData(List<Meal> meals, LocalDate startDate, LocalDate endDate){
+        return service.sortData(meals, startDate, endDate);
+    }
+    public List<MealTo> getMealToList(List<Meal> meals, int colorPerDay, LocalTime startTime, LocalTime endTime) {
+        return MealsUtil.getFilteredTos(meals, colorPerDay, startTime, endTime);
     }
 }
