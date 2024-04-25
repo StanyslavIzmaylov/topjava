@@ -3,11 +3,10 @@ package ru.javawebinar.topjava.repository.inmemory;
 import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
+import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.util.MealsUtil;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -18,10 +17,14 @@ public class InMemoryMealRepository implements MealRepository {
     private final AtomicInteger counter = new AtomicInteger(0);
 
     {
+        int counter = 0;
         for (Meal meal : MealsUtil.meals) {
-            save(1, meal);
-            meal.setId(null);
-            save(2, meal);
+            if(counter < 7) {
+                save(1, meal);
+            }else {
+                save(2, meal);
+            }
+            counter++;
         }
     }
 
@@ -65,12 +68,8 @@ public class InMemoryMealRepository implements MealRepository {
     @Override
     public List<Meal> filterData(int userId, LocalDate startDate, LocalDate endDate) {
         List<Meal> filterData = new ArrayList<>();
-        for (Meal meal : getAll(userId)) {
-            if (meal.getDateTime().isEqual(LocalDateTime.of(startDate, LocalTime.MIN)) |
-                    meal.getDateTime().isAfter(LocalDateTime.of(startDate, LocalTime.MIN)) &&
-                    meal.getDateTime().isEqual(LocalDateTime.of(endDate, LocalTime.MAX))
-                            | meal.getDateTime().isBefore(LocalDateTime.of(endDate, LocalTime.MAX))) {
-
+        for (Meal meal : repository.get(userId).values()) {
+                if (DateTimeUtil.isBetweenDate(meal.getDate(),startDate,endDate)){
                 filterData.add(meal);
             }
         }

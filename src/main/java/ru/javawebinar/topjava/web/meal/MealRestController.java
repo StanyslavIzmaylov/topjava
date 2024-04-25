@@ -9,6 +9,7 @@ import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.web.SecurityUtil;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -40,9 +41,9 @@ public class MealRestController {
         return service.get(SecurityUtil.authUserId(), id);
     }
 
-    public List<Meal> getAll() {
+    public List<MealTo> getAll() {
         log.info("getAll");
-        return service.getAll(SecurityUtil.authUserId());
+        return MealsUtil.getTos(service.getAll(SecurityUtil.authUserId()),MealsUtil.DEFAULT_CALORIES_PER_DAY);
     }
 
     public Meal update(Meal meal, int mealId) {
@@ -51,26 +52,21 @@ public class MealRestController {
         return service.update(SecurityUtil.authUserId(), meal);
     }
 
+    public boolean getParameter(String parameter) {
+        return (parameter == null) || parameter.equalsIgnoreCase("");
+    }
+
     public List<MealTo> getMealToList(String startDateParameter, String endDateParameter, String startTimeParameter, String endTimeParameter) {
-        LocalTime startTime;
-        LocalTime endTime;
-        if (startTimeParameter == null
-                || startTimeParameter.equalsIgnoreCase("")) {
-            startTime = LocalTime.MIN;
-        } else startTime = LocalTime.parse(startTimeParameter);
-        if (endTimeParameter == null
-                || endTimeParameter.equalsIgnoreCase("")) {
-            endTime = LocalTime.MAX;
-        } else endTime = LocalTime.parse(endTimeParameter);
-        LocalDate startDate;
-        LocalDate endDate;
-        if (startDateParameter == null || startDateParameter.equalsIgnoreCase("")) {
-            startDate = LocalDate.MIN;
-        } else startDate = LocalDate.parse(startDateParameter);
-        if (endDateParameter == null || endDateParameter.equalsIgnoreCase("")) {
-            endDate = LocalDate.MAX;
-        } else endDate = LocalDate.parse(endDateParameter);
-        service.filterData(SecurityUtil.authUserId(),startDate,endDate);
-        return MealsUtil.getFilteredTos(service.filterData(SecurityUtil.authUserId(),startDate,endDate), MealsUtil.DEFAULT_CALORIES_PER_DAY, startTime, endTime);
+        LocalDate startDate = getParameter(startDateParameter)
+                ? LocalDate.MIN : LocalDate.parse(startDateParameter);
+        LocalDate endDate = getParameter(endDateParameter)
+                ? LocalDate.MAX : LocalDate.parse(endDateParameter);
+
+        LocalTime startTime = getParameter(startTimeParameter)
+                ? LocalTime.MIN : LocalTime.parse(startTimeParameter);
+        LocalTime endTime = getParameter(endTimeParameter)
+                ? LocalTime.MAX : LocalTime.parse(endTimeParameter);
+
+        return MealsUtil.getFilteredTos(service.filterData(SecurityUtil.authUserId(), startDate, endDate), MealsUtil.DEFAULT_CALORIES_PER_DAY, startTime, endTime);
     }
 }
