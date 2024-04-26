@@ -19,9 +19,9 @@ public class InMemoryMealRepository implements MealRepository {
     {
         int counter = 0;
         for (Meal meal : MealsUtil.meals) {
-            if(counter < 7) {
+            if (counter < 7) {
                 save(1, meal);
-            }else {
+            } else {
                 save(2, meal);
             }
             counter++;
@@ -58,22 +58,28 @@ public class InMemoryMealRepository implements MealRepository {
     public List<Meal> getAll(int userId) {
         List<Meal> meals = new ArrayList<>();
         if (repository.get(userId) == null) {
-            return meals;
-        }
-        meals.addAll(repository.get(userId).values());
-        meals.sort(Comparator.comparing(Meal::getDate).reversed());
-        return meals;
+            return new ArrayList<>();
+        } else
+            meals.addAll(repository.get(userId).values());
+        return getAllSort(meals);
     }
 
     @Override
     public List<Meal> filterData(int userId, LocalDate startDate, LocalDate endDate) {
         List<Meal> filterData = new ArrayList<>();
-        for (Meal meal : repository.get(userId).values()) {
-                if (DateTimeUtil.isBetweenDate(meal.getDate(),startDate,endDate)){
+        if (getAll(userId).isEmpty()) {
+            return new ArrayList<>();
+        }
+        for (Meal meal : getAll(userId)) {
+            if (DateTimeUtil.isBetweenDate(meal.getDate(), startDate, endDate)) {
                 filterData.add(meal);
             }
         }
-        return filterData;
+        return getAllSort(filterData);
+    }
+
+    private List<Meal> getAllSort(List<Meal> meals) {
+        meals.sort(Comparator.comparing(Meal::getDate).reversed());
+        return meals;
     }
 }
-
