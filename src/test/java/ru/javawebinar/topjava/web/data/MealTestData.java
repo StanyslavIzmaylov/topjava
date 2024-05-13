@@ -1,4 +1,4 @@
-package ru.javawebinar.topjava;
+package ru.javawebinar.topjava.web.data;
 
 import ru.javawebinar.topjava.model.Meal;
 
@@ -12,14 +12,13 @@ import static ru.javawebinar.topjava.model.AbstractBaseEntity.START_SEQ;
 
 public class MealTestData {
     public static final int MEAL_ID = START_SEQ;
-    public static final Meal meal = new Meal(MEAL_ID, LocalDateTime.of
-            (2015, Month.JUNE, 1, 14, 0), "Админ ланч", 510);
-    public static final Meal meal1 = new Meal(MEAL_ID, LocalDateTime.of
-            (2015, Month.JUNE, 1, 14, 0), "Юзер ланч", 800);
+    public static final Meal meal = new Meal(100100, LocalDateTime.of(2021, Month.JUNE, 21, 10, 0), "Юзер ланч", 510);
+
+    public static final Meal meal1 = new Meal(100101, LocalDateTime.of(2021, Month.JUNE, 22, 00, 0), "Юзер перекус", 200);
+    public static final Meal meal2 = new Meal(100102, LocalDateTime.of(2021, Month.JUNE, 22, 10, 30), "Юзер ланч", 350);
 
     public static Meal getNew() {
-        return new Meal(null, LocalDateTime.of
-                (2020, Month.JUNE, 1, 14, 0), "Новое блюдо", 1000);
+        return new Meal(null, LocalDateTime.of(2020, Month.JUNE, 1, 14, 0), "Новое блюдо", 1000);
     }
 
     public static Meal getUpdated() {

@@ -9,17 +9,17 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringRunner;
-import ru.javawebinar.topjava.MealTestData;
+import ru.javawebinar.topjava.web.data.MealTestData;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
+
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.List;
 
 import static org.junit.Assert.*;
-import static ru.javawebinar.topjava.MealTestData.MEAL_ID;
-import static ru.javawebinar.topjava.UserTestData.*;
-import static ru.javawebinar.topjava.MealTestData.*;
+import static ru.javawebinar.topjava.web.data.UserTestData.*;
+import static ru.javawebinar.topjava.web.data.MealTestData.*;
 
 @ContextConfiguration({
         "classpath:spring/spring-app.xml",
@@ -28,6 +28,8 @@ import static ru.javawebinar.topjava.MealTestData.*;
 @RunWith(SpringRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 public class MealServiceTest {
+
+    private final int MEAL_ID = 100100;
 
     static {
         SLF4JBridgeHandler.install();
@@ -39,7 +41,7 @@ public class MealServiceTest {
     @Test
     public void deleteNoUserMeal() {
         assertThrows(NotFoundException.class, () ->
-                mealService.delete(10001, USER_ID));
+                mealService.delete(100200, USER_ID));
     }
 
     @Test
@@ -55,43 +57,41 @@ public class MealServiceTest {
     }
 
     @Test
-    public void testGet() {
-        Meal meal = mealService.get(MEAL_ID, USER_ID);
-        assertEquals(meal, MealTestData.meal);
+    public void get() {
+        Meal meal = mealService.get(100102, USER_ID);
+        assertMatch(meal, meal2);
     }
 
     @Test
-    public void testDelete() {
+    public void delete() {
         mealService.delete(MEAL_ID, USER_ID);
         assertThrows(NotFoundException.class, () -> mealService.get(MEAL_ID, USER_ID));
     }
 
     @Test
-    public void testGetBetweenInclusive() {
+    public void getBetweenInclusive() {
         LocalDateTime startDate = LocalDateTime.of
-                (2015, Month.JUNE, 1, 13, 0);
+                (2021, Month.JUNE, 22, 00, 0);
         LocalDateTime endDate = LocalDateTime.of
-                (2015, Month.JUNE, 3, 16, 0);
-
-        assertTrue(meal.getDate().compareTo(startDate.toLocalDate()) >= 0
-                && meal.getDate().compareTo(endDate.toLocalDate()) <= 0);
+                (2021, Month.JUNE, 22, 23, 0);
+        assertMatch(mealService.getBetweenInclusive(startDate.toLocalDate(), endDate.toLocalDate(), USER_ID), meal1, meal2);
     }
 
     @Test
-    public void testGetAll() {
+    public void getAll() {
         List<Meal> all = mealService.getAll(USER_ID);
-        MealTestData.assertMatch(all, meal);
+        MealTestData.assertMatch(all, meal2, meal1, meal);
     }
 
     @Test
-    public void testUpdate() {
+    public void update() {
         Meal updated = MealTestData.getUpdated();
         mealService.update(updated, USER_ID);
         MealTestData.assertMatch(mealService.get(MEAL_ID, USER_ID), MealTestData.getUpdated());
     }
 
     @Test
-    public void testCreate() {
+    public void create() {
         Meal created = mealService.create(MealTestData.getNew(), USER_ID);
         Integer newId = created.getId();
         Meal newMeal = MealTestData.getNew();
@@ -103,7 +103,7 @@ public class MealServiceTest {
     @Test
     public void duplicateDateCreate() {
         assertThrows(DataAccessException.class, () ->
-                mealService.create(new Meal(null,LocalDateTime.of
-                        (2021, Month.JUNE, 21, 10, 0), "Админ ланч", 510),USER_ID));
+                mealService.create(new Meal(null, LocalDateTime.of
+                        (2021, Month.JUNE, 21, 10, 0), "Админ ланч", 510), USER_ID));
     }
 }

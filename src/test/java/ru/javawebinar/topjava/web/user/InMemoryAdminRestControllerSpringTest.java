@@ -2,7 +2,6 @@ package ru.javawebinar.topjava.web.user;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +10,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 import ru.javawebinar.topjava.repository.inmemory.InMemoryUserRepository;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
-import static ru.javawebinar.topjava.UserTestData.NOT_FOUND;
-import static ru.javawebinar.topjava.UserTestData.USER_ID;
+import static ru.javawebinar.topjava.web.data.UserTestData.NOT_FOUND;
+import static ru.javawebinar.topjava.web.data.UserTestData.USER_ID;
 
-@ContextConfiguration(locations = "/test-context.xml")
+@ContextConfiguration(locations = "/spring-test-context.xml")
 @RunWith(SpringRunner.class)
 public class InMemoryAdminRestControllerSpringTest {
 
