@@ -1,4 +1,4 @@
-package ru.javawebinar.topjava.web.data;
+package ru.javawebinar.topjava.web;
 
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;

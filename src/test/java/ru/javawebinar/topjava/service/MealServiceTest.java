@@ -9,7 +9,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringRunner;
-import ru.javawebinar.topjava.web.data.MealTestData;
+import ru.javawebinar.topjava.web.MealTestData;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
@@ -18,8 +18,8 @@ import java.time.Month;
 import java.util.List;
 
 import static org.junit.Assert.*;
-import static ru.javawebinar.topjava.web.data.UserTestData.*;
-import static ru.javawebinar.topjava.web.data.MealTestData.*;
+import static ru.javawebinar.topjava.web.UserTestData.*;
+import static ru.javawebinar.topjava.web.MealTestData.*;
 
 @ContextConfiguration({
         "classpath:spring/spring-app.xml",
@@ -29,7 +29,9 @@ import static ru.javawebinar.topjava.web.data.MealTestData.*;
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 public class MealServiceTest {
 
-    private final int MEAL_ID = 100100;
+    private final int MEAL_ID = 99999;
+
+    private final int MEAL_ID_ADMIN = 99991;
 
     static {
         SLF4JBridgeHandler.install();
@@ -41,25 +43,25 @@ public class MealServiceTest {
     @Test
     public void deleteNoUserMeal() {
         assertThrows(NotFoundException.class, () ->
-                mealService.delete(100200, USER_ID));
+                mealService.delete(MEAL_ID_ADMIN, USER_ID));
     }
 
     @Test
     public void updateNoUserMeal() {
         assertThrows(NotFoundException.class, () ->
-                mealService.update(meal, 10001));
+                mealService.update(meal, ADMIN_ID));
     }
 
     @Test
     public void getNoUserMeal() {
         assertThrows(NotFoundException.class, () ->
-                mealService.get(10001, USER_ID));
+                mealService.get(MEAL_ID_ADMIN, USER_ID));
     }
 
     @Test
     public void get() {
-        Meal meal = mealService.get(100102, USER_ID);
-        assertMatch(meal, meal2);
+        Meal meal = mealService.get(MEAL_ID, USER_ID);
+        assertMatch(meal, meal);
     }
 
     @Test

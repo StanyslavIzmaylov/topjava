@@ -8,7 +8,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ru.javawebinar.topjava.web.data.UserTestData.*;
+import static ru.javawebinar.topjava.web.UserTestData.*;
 
 
 @Repository
