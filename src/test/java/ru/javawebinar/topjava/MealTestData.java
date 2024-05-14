@@ -12,8 +12,8 @@ import static ru.javawebinar.topjava.model.AbstractBaseEntity.START_SEQ;
 
 public class MealTestData {
 
-    public static final int MEAL_ID_ADMIN = 99991;
-    public static final int MEAL_ID = 99999;
+    public static final int MEAL_ID_ADMIN = START_SEQ - 9;
+    public static final int MEAL_ID = START_SEQ - 1;
     public static final int MEAL_ID1 = START_SEQ - 2;
     public static final int MEAL_ID2 = START_SEQ - 3;
     public static final Meal meal = new Meal(MEAL_ID, LocalDateTime.of(2021, Month.JUNE, 21, 10, 0), "Юзер ланч", 510);
