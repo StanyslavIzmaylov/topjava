@@ -1,4 +1,4 @@
-package ru.javawebinar.topjava.web;
+package ru.javawebinar.topjava;
 
 import ru.javawebinar.topjava.model.Meal;
 
@@ -11,11 +11,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static ru.javawebinar.topjava.model.AbstractBaseEntity.START_SEQ;
 
 public class MealTestData {
-    public static final int MEAL_ID = START_SEQ-1;
-    public static final int MEAL_ID1 = START_SEQ-2;
-    public static final int MEAL_ID2 = START_SEQ-3;
-    public static final Meal meal = new Meal(MEAL_ID, LocalDateTime.of(2021, Month.JUNE, 21, 10, 0), "Юзер ланч", 510);
 
+    public static final int MEAL_ID_ADMIN = 99991;
+    public static final int MEAL_ID = 99999;
+    public static final int MEAL_ID1 = START_SEQ - 2;
+    public static final int MEAL_ID2 = START_SEQ - 3;
+    public static final Meal meal = new Meal(MEAL_ID, LocalDateTime.of(2021, Month.JUNE, 21, 10, 0), "Юзер ланч", 510);
     public static final Meal meal1 = new Meal(MEAL_ID1, LocalDateTime.of(2021, Month.JUNE, 22, 0, 0), "Юзер перекус", 200);
     public static final Meal meal2 = new Meal(MEAL_ID2, LocalDateTime.of(2021, Month.JUNE, 22, 10, 30), "Юзер ланч", 350);
 
