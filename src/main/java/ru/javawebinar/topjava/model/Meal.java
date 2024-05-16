@@ -1,19 +1,31 @@
 package ru.javawebinar.topjava.model;
 
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-
+@NamedQueries({
+        @NamedQuery(name = Meal.GET_ALL, query = "SELECT u FROM Meal u WHERE user.id=?1"),
+        @NamedQuery(name = Meal.GET, query = "SELECT u FROM Meal u WHERE user.id=?1 AND u.id=?2"),
+        @NamedQuery(name = Meal.DELET, query = "DELETE FROM Meal u WHERE user.id=:user_id AND u.id=:id"),
+        @NamedQuery(name = Meal.BETWEEN, query = "SELECT u FROM Meal u WHERE user.id=:user_id AND u.dateTime >=  ?1 AND u.dateTime < ?2 ORDER BY u.dateTime DESC"),
+})
+@Entity
+@Table(name = "meal")
 public class Meal extends AbstractBaseEntity {
+
+    public static final String GET_ALL = "Meal.getAll";
+    public static final String GET = "Meal.get";
+    public static final String DELET = "Meal.delete";
+    public static final String BETWEEN = "Meal.getBetweenHalfOpen";
+
+    @Column(name = "date_time", nullable = false, unique = true)
     private LocalDateTime dateTime;
-
+    @Column(name = "description", nullable = false)
     private String description;
-
+    @Column(name = "calories", nullable = false)
     private int calories;
-
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private User user;
 
     public Meal() {
