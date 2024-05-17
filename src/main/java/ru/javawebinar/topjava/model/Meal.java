@@ -1,14 +1,19 @@
 package ru.javawebinar.topjava.model;
 
+import org.hibernate.validator.constraints.Range;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 @NamedQueries({
-        @NamedQuery(name = Meal.GET_ALL, query = "SELECT u FROM Meal u WHERE user.id=?1"),
-        @NamedQuery(name = Meal.GET, query = "SELECT u FROM Meal u WHERE user.id=?1 AND u.id=?2"),
+        @NamedQuery(name = Meal.GET_ALL, query = "SELECT u FROM Meal u WHERE user.id=:user_id"),
+        @NamedQuery(name = Meal.GET, query = "SELECT u FROM Meal u WHERE user.id=:user_id AND u.id=:id"),
         @NamedQuery(name = Meal.DELET, query = "DELETE FROM Meal u WHERE user.id=:user_id AND u.id=:id"),
-        @NamedQuery(name = Meal.BETWEEN, query = "SELECT u FROM Meal u WHERE user.id=:user_id AND u.dateTime >=  ?1 AND u.dateTime < ?2 ORDER BY u.dateTime DESC"),
+        @NamedQuery(name = Meal.BETWEEN, query = "SELECT u FROM Meal u " +
+                "WHERE user.id=:user_id AND u.dateTime >=:start_date AND u.dateTime <:end_date ORDER BY u.dateTime DESC"),
 })
 @Entity
 @Table(name = "meal")
@@ -18,14 +23,19 @@ public class Meal extends AbstractBaseEntity {
     public static final String GET = "Meal.get";
     public static final String DELET = "Meal.delete";
     public static final String BETWEEN = "Meal.getBetweenHalfOpen";
-
-    @Column(name = "date_time", nullable = false, unique = true)
+    @CollectionTable(uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "date_time"}, name = "uk_date_time")})
+    @Column(name = "date_time", nullable = false)
+    @NotNull
     private LocalDateTime dateTime;
     @Column(name = "description", nullable = false)
+    @Size(min = 2, max = 120)
     private String description;
     @Column(name = "calories", nullable = false)
+    @Range(min = 10, max = 5000)
     private int calories;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn (name = "user_id")
+    @NotNull
     private User user;
 
     public Meal() {

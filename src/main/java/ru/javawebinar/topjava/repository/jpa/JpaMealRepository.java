@@ -34,22 +34,33 @@ public class JpaMealRepository implements MealRepository {
     @Override
     @Transactional
     public boolean delete(int id, int userId) {
-        return em.createNamedQuery(Meal.DELET).setParameter("user_id", userId).setParameter("id", id).executeUpdate() != 0;
+        return em.createNamedQuery(Meal.DELET)
+                .setParameter("user_id", userId)
+                .setParameter("id", id)
+                .executeUpdate() != 0;
     }
 
     @Override
     public Meal get(int id, int userId) {
-        return em.createNamedQuery(Meal.GET, Meal.class).setParameter(1, userId).setParameter(2, id).getSingleResult();
+        return em.createNamedQuery(Meal.GET, Meal.class)
+                .setParameter("user_id", userId)
+                .setParameter("id", id)
+                .getSingleResult();
     }
 
     @Override
     public List<Meal> getAll(int userId) {
-        return em.createNamedQuery(Meal.GET_ALL, Meal.class).setParameter(1, userId).getResultList();
+        return em.createNamedQuery(Meal.GET_ALL, Meal.class)
+                .setParameter("user_id", userId)
+                .getResultList();
     }
 
     @Override
     public List<Meal> getBetweenHalfOpen(LocalDateTime startDateTime, LocalDateTime endDateTime, int userId) {
         return em.createNamedQuery(Meal.BETWEEN, Meal.class)
-                .setParameter("user_id", userId).setParameter(1,startDateTime).setParameter(2,endDateTime).getResultList();
+                .setParameter("user_id", userId)
+                .setParameter("start_date", startDateTime)
+                .setParameter("end_date", endDateTime)
+                .getResultList();
     }
 }
