@@ -27,14 +27,18 @@ public class JpaMealRepository implements MealRepository {
             return meal;
         }
         User ref = em.getReference(User.class, userId);
-        meal.setUser(ref);
-        return em.merge(meal);
+        List<Meal> meals = getAll(userId);
+        if (meals.contains(meal)) {
+            meal.setUser(ref);
+            return em.merge(meal);
+        }
+       return null;
     }
 
     @Override
     @Transactional
     public boolean delete(int id, int userId) {
-        return em.createNamedQuery(Meal.DELET)
+        return em.createNamedQuery(Meal.DELETE)
                 .setParameter("user_id", userId)
                 .setParameter("id", id)
                 .executeUpdate() != 0;
@@ -42,10 +46,14 @@ public class JpaMealRepository implements MealRepository {
 
     @Override
     public Meal get(int id, int userId) {
-        return em.createNamedQuery(Meal.GET, Meal.class)
-                .setParameter("user_id", userId)
-                .setParameter("id", id)
-                .getSingleResult();
+
+        List<Meal> mealList = getAll(userId);
+        for (Meal meal : mealList) {
+            if (meal.getId() == id) {
+                return meal;
+            }
+        }
+        return null;
     }
 
     @Override
