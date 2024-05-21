@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 @NamedQueries({
         @NamedQuery(name = Meal.GET_ALL, query = "SELECT u FROM Meal u WHERE user.id=:user_id ORDER BY u.dateTime DESC"),
-        @NamedQuery(name = Meal.GET, query = "SELECT u FROM Meal u WHERE u.user.id=:user_id"),
+        @NamedQuery(name = Meal.GET, query = "SELECT u FROM Meal u WHERE u.user.id=:user_id AND u.id=:id"),
         @NamedQuery(name = Meal.DELETE, query = "DELETE FROM Meal u WHERE user.id=:user_id AND u.id=:id"),
         @NamedQuery(name = Meal.BETWEEN, query = "SELECT u FROM Meal u " +
                 "WHERE user.id=:user_id AND u.dateTime >=:start_date AND u.dateTime <:end_date ORDER BY u.dateTime DESC"),
@@ -23,6 +23,7 @@ public class Meal extends AbstractBaseEntity {
     public static final String GET = "Meal.get";
     public static final String DELETE = "Meal.delete";
     public static final String BETWEEN = "Meal.getBetweenHalfOpen";
+
     @CollectionTable(uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "date_time"}, name = "uk_date_time")})
     @Column(name = "date_time", nullable = false)
     @NotNull
