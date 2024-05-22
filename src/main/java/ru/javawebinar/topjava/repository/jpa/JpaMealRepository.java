@@ -27,9 +27,7 @@ public class JpaMealRepository implements MealRepository {
             em.persist(meal);
             return meal;
         } else {
-            List<Meal> mealList = em.createNamedQuery(Meal.GET, Meal.class)
-                    .setParameter("user_id", userId).setParameter("id", meal.id()).getResultList();
-            if (DataAccessUtils.singleResult(mealList) != null) {
+            if (get(meal.getId(), userId) != null) {
                 User ref = em.getReference(User.class, userId);
                 meal.setUser(ref);
                 return em.merge(meal);

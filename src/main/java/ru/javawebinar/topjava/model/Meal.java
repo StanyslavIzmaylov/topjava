@@ -16,7 +16,7 @@ import java.time.LocalTime;
                 "WHERE user.id=:user_id AND u.dateTime >=:start_date AND u.dateTime <:end_date ORDER BY u.dateTime DESC"),
 })
 @Entity
-@Table(name = "meal")
+@Table(name = "meal", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "date_time"}, name = "meal_unique_user_datetime_idx")})
 public class Meal extends AbstractBaseEntity {
 
     public static final String GET_ALL = "Meal.getAll";
@@ -24,7 +24,6 @@ public class Meal extends AbstractBaseEntity {
     public static final String DELETE = "Meal.delete";
     public static final String BETWEEN = "Meal.getBetweenHalfOpen";
 
-    @CollectionTable(uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "date_time"}, name = "uk_date_time")})
     @Column(name = "date_time", nullable = false)
     @NotNull
     private LocalDateTime dateTime;
@@ -35,7 +34,7 @@ public class Meal extends AbstractBaseEntity {
     @Range(min = 10, max = 5000)
     private int calories;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     @NotNull
     private User user;
 
