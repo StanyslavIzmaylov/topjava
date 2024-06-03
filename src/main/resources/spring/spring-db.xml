@@ -26,19 +26,7 @@
 
 
 
-    <jdbc:initialize-database data-source="dataSource" enabled="${database.init}">
-        <jdbc:script location="classpath:db/initDB.sql"/>
-        <jdbc:script encoding="utf-8" location="classpath:db/populateDB.sql"/>
-    </jdbc:initialize-database>
 
-    <!--no pooling-->
-    <bean id="dataSource"
-          class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="driverClassName" value="org.postgresql.Driver"/>
-        <property name="url" value="${database.url}"/>
-        <property name="username" value="${database.username}"/>
-        <property name="password" value="${database.password}"/>
-    </bean>
 
 
 
@@ -92,6 +80,19 @@
     </beans>
 
     <beans profile="jdbc">
+        <jdbc:initialize-database data-source="dataSource" enabled="${database.init}">
+            <jdbc:script location="classpath:db/initDB.sql"/>
+            <jdbc:script encoding="utf-8" location="classpath:db/populateDB.sql"/>
+        </jdbc:initialize-database>
+
+        <!--no pooling-->
+        <bean id="dataSource"
+              class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+            <property name="driverClassName" value="org.postgresql.Driver"/>
+            <property name="url" value="${database.url}"/>
+            <property name="username" value="${database.username}"/>
+            <property name="password" value="${database.password}"/>
+        </bean>
     </beans>
     <beans profile="jpa">
         <context:component-scan base-package="ru.javawebinar.**.repository.jpa"/>
