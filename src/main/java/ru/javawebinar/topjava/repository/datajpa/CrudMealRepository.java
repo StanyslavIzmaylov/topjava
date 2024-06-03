@@ -9,7 +9,7 @@ import ru.javawebinar.topjava.model.Meal;
 
 import java.time.LocalDateTime;
 import java.util.List;
-@Transactional(readOnly = true)
+
 public interface CrudMealRepository extends JpaRepository<Meal, Integer> {
     @Transactional
     @Modifying
@@ -18,12 +18,10 @@ public interface CrudMealRepository extends JpaRepository<Meal, Integer> {
     int delete(@Param("id") int id,@Param("user_id") int userId);
 
     @Modifying
-    @Query("SELECT m FROM Meal m WHERE m.user.id=:user_id AND m.id=:id")
-    Meal get(@Param("user_id") int userId,@Param("id") int id);
-    @Modifying
     @Query("SELECT m FROM Meal m WHERE m.user.id=:user_id ORDER BY m.dateTime DESC")
     List<Meal> getAll(@Param("user_id") int userId);
+
     @Modifying
     @Query("SELECT m FROM Meal m WHERE m.user.id=:userId AND m.dateTime >= :startDateTime AND m.dateTime < :endDateTime ORDER BY m.dateTime DESC")
-    List<Meal> getBetween(@Param("startDateTime")LocalDateTime startDateTime,@Param("endDateTime")LocalDateTime endDateTime, @Param("user_id") int userId);
+    List<Meal> getBetween(@Param("userId") int userId,@Param("startDateTime")LocalDateTime startDateTime,@Param("endDateTime")LocalDateTime endDateTime);
 }
