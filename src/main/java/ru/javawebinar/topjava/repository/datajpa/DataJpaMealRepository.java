@@ -7,7 +7,7 @@ import ru.javawebinar.topjava.repository.MealRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
-@Profile("datajpa")
+
 @Repository
 public class DataJpaMealRepository implements MealRepository {
 

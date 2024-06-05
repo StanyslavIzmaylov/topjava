@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-@Profile("jpa")
 @Transactional(readOnly = true)
 public class JpaMealRepository implements MealRepository {
 
