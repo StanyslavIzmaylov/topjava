@@ -37,11 +37,13 @@ public class UserService {
     public User get(int id) {
         return checkNotFoundWithId(repository.get(id), id);
     }
-    @Transactional(readOnly = true)
-    public User getUserMeals(int id) {
 
-        return   null;
+    @Transactional
+    public User getUserMeals(int id) {
+        User user = repository.get(id);
+        return user;
     }
+
     public User getByEmail(String email) {
         Assert.notNull(email, "email must not be null");
         return checkNotFound(repository.getByEmail(email), "email=" + email);
