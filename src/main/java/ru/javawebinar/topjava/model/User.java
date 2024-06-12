@@ -54,7 +54,7 @@ public class User extends AbstractNamedEntity {
     @Range(min = 10, max = 10000)
     private int caloriesPerDay = DEFAULT_CALORIES_PER_DAY;
 
-    @OneToMany(mappedBy="user",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Meal> meals;
 
     public User() {
@@ -67,9 +67,7 @@ public class User extends AbstractNamedEntity {
     public User(Integer id, String name, String email, String password, Role... roles) {
         this(id, name, email, password, DEFAULT_CALORIES_PER_DAY, true, new Date(), List.of(roles));
     }
-    public User(Integer id, String name, String email, String password,List<Meal> meals, Role... roles) {
-        this(id, name, email, password, DEFAULT_CALORIES_PER_DAY, true, new Date(),meals, List.of(roles));
-    }
+
     public User(Integer id, String name, String email, String password, int caloriesPerDay, boolean enabled, Date registered, Collection<Role> roles) {
         super(id, name);
         this.email = email;
@@ -79,16 +77,7 @@ public class User extends AbstractNamedEntity {
         this.registered = registered;
         setRoles(roles);
     }
-    public User(Integer id, String name, String email, String password, int caloriesPerDay, boolean enabled, Date registered,List<Meal> meals, Collection<Role> roles) {
-        super(id, name);
-        this.email = email;
-        this.password = password;
-        this.caloriesPerDay = caloriesPerDay;
-        this.enabled = enabled;
-        this.registered = registered;
-        this.meals = meals;
-        setRoles(roles);
-    }
+
     public String getEmail() {
         return email;
     }

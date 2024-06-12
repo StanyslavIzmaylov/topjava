@@ -8,7 +8,6 @@ import org.springframework.util.Assert;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
 
-
 import java.util.List;
 
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFound;
@@ -41,6 +40,8 @@ public class UserService {
     @Transactional
     public User getUserMeals(int id) {
         User user = repository.get(id);
+        user.getMeals();
+        user.getMeals().toString();
         return user;
     }
 

@@ -2,7 +2,6 @@ package ru.javawebinar.topjava.repository.datajpa;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
 
@@ -19,7 +18,6 @@ public class DataJpaUserRepository implements UserRepository {
     }
 
     @Override
-    @Transactional
     public User save(User user) {
         return crudRepository.save(user);
     }
@@ -30,13 +28,11 @@ public class DataJpaUserRepository implements UserRepository {
     }
 
     @Override
-    @Transactional
     public User get(int id) {
         return crudRepository.findById(id).orElse(null);
     }
 
     @Override
-    @Transactional
     public User getByEmail(String email) {
         return crudRepository.getByEmail(email);
     }
