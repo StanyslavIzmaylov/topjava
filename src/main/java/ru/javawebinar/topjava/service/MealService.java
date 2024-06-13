@@ -1,5 +1,6 @@
 package ru.javawebinar.topjava.service;
 
+import org.hibernate.Hibernate;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,10 +27,11 @@ public class MealService {
     public Meal get(int id, int userId) {
         return checkNotFoundWithId(repository.get(id, userId), id);
     }
+
     @Transactional
     public Meal getMealAndUser(int id, int userId) {
         Meal meal = repository.get(id, userId);
-        meal.getUser();
+        Hibernate.initialize(meal.getUser());
         return meal;
     }
 

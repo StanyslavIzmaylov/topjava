@@ -9,6 +9,7 @@ import ru.javawebinar.topjava.repository.UserRepository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
+
 @Repository
 @Transactional(readOnly = true)
 public class JpaUserRepository implements UserRepository {

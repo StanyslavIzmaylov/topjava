@@ -1,5 +1,6 @@
 package ru.javawebinar.topjava.service;
 
+import org.hibernate.Hibernate;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -40,8 +41,7 @@ public class UserService {
     @Transactional
     public User getUserMeals(int id) {
         User user = repository.get(id);
-        user.getMeals();
-        user.getMeals().toString();
+        Hibernate.initialize(user.getMeals());
         return user;
     }
 

@@ -37,6 +37,7 @@ public abstract class AbstractServiceTest {
             log.info(result + " ms\n");
         }
     };
+
     @AfterClass
     public static void printResult() {
         log.info("\n---------------------------------" +
@@ -45,13 +46,4 @@ public abstract class AbstractServiceTest {
                 results +
                 "\n---------------------------------");
     }
-    public void create(){}
-
-    public void delete(){}
-
-    public void get(){}
-
-    public void update(){}
-
-    public void getAll(){}
 }
