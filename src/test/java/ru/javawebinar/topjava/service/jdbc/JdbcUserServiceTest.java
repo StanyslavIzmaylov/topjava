@@ -7,12 +7,4 @@ import ru.javawebinar.topjava.service.UserServiceTest;
 
 @ActiveProfiles(Profiles.JDBC)
 public class JdbcUserServiceTest extends UserServiceTest {
-    @AfterClass
-    public static void printResult() {
-        log.info("\n---------------------------------" +
-                "\nTest                 Duration, ms" +
-                "\n---------------------------------" +
-                results +
-                "\n---------------------------------");
-    }
 }

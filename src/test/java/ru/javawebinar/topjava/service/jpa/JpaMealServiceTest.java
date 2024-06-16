@@ -7,12 +7,4 @@ import ru.javawebinar.topjava.service.MealServiceTest;
 
 @ActiveProfiles(Profiles.JPA)
 public class JpaMealServiceTest extends MealServiceTest {
-    @AfterClass
-    public static void printResult() {
-        log.info("\n---------------------------------" +
-                "\nTest                 Duration, ms" +
-                "\n---------------------------------" +
-                results +
-                "\n---------------------------------");
-    }
 }

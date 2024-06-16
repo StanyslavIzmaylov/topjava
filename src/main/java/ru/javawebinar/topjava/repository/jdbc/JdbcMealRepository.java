@@ -35,7 +35,6 @@ public abstract class JdbcMealRepository implements MealRepository {
         this.jdbcTemplate = jdbcTemplate;
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
-
     @Override
     public Meal save(Meal meal, int userId) {
         MapSqlParameterSource map = new MapSqlParameterSource()
@@ -60,6 +59,12 @@ public abstract class JdbcMealRepository implements MealRepository {
     }
 
     @Override
+    public List<Meal> getBetweenHalfOpen(LocalDateTime startDateTime, LocalDateTime endDateTime, int userId) {
+        return jdbcTemplate.query(
+                "SELECT * FROM meal WHERE user_id=?  AND date_time >=  ? AND date_time < ? ORDER BY date_time DESC",
+                ROW_MAPPER, userId, getDateWithDb(startDateTime), getDateWithDb(endDateTime));
+    }
+    @Override
     public boolean delete(int id, int userId) {
         return jdbcTemplate.update("DELETE FROM meal WHERE id=? AND user_id=?", id, userId) != 0;
     }
@@ -77,19 +82,5 @@ public abstract class JdbcMealRepository implements MealRepository {
                 "SELECT * FROM meal WHERE user_id=? ORDER BY date_time DESC", ROW_MAPPER, userId);
     }
 
-    @Override
-    public List<Meal> getBetweenHalfOpen(LocalDateTime startDateTime, LocalDateTime endDateTime, int userId) {
-        return jdbcTemplate.query(
-                "SELECT * FROM meal WHERE user_id=?  AND date_time >=  ? AND date_time < ? ORDER BY date_time DESC",
-                ROW_MAPPER, userId, getDateWithDb(startDateTime), getDateWithDb(endDateTime));
-    }
-
-    public <T> T getDateWithDb(LocalDateTime dateTime) {
-        if (Profiles.getActiveDbProfile() == Profiles.POSTGRES_DB) {
-            return (T) dateTime;
-        } else if (Profiles.getActiveDbProfile() == Profiles.HSQL_DB) {
-            return (T) Timestamp.valueOf(dateTime);
-        }
-        return null;
-    }
+    public abstract <T> T getDateWithDb(LocalDateTime dateTime);
 }

@@ -13,7 +13,7 @@ import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.service.MealServiceTest;
 
-import static ru.javawebinar.topjava.MealTestData.ADMIN_MEAL_ID;
+import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.UserTestData.*;
 
 @ActiveProfiles(Profiles.DATAJPA)
@@ -22,18 +22,8 @@ public class DatajpaMealServiceTest extends MealServiceTest {
     private MealService service;
 
     @Test
-    @Transactional
     public void getMealAndUser() {
         Meal meal = service.getMealAndUser(ADMIN_MEAL_ID, ADMIN_ID);
-        Assert.notNull(meal.getUser());
-        Assert.isTrue(Hibernate.unproxy(meal.getUser()) instanceof User);
-    }
-    @AfterClass
-    public static void printResult() {
-        log.info("\n---------------------------------" +
-                "\nTest                 Duration, ms" +
-                "\n---------------------------------" +
-                results +
-                "\n---------------------------------");
+        USER_MATCHER.assertMatch((User) Hibernate.unproxy(meal.getUser()),admin);
     }
 }

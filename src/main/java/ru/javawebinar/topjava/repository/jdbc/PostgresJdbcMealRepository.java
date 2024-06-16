@@ -23,4 +23,9 @@ public class PostgresJdbcMealRepository extends JdbcMealRepository {
     public PostgresJdbcMealRepository(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         super(jdbcTemplate, namedParameterJdbcTemplate);
     }
+
+    @Override
+    public <T> T getDateWithDb(LocalDateTime dateTime) {
+        return (T) dateTime;
+    }
 }
