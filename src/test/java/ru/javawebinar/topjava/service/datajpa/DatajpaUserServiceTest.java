@@ -11,6 +11,7 @@ import ru.javawebinar.topjava.service.UserServiceTest;
 import static ru.javawebinar.topjava.MealTestData.MEAL_MATCHER;
 import static ru.javawebinar.topjava.MealTestData.meals;
 import static ru.javawebinar.topjava.UserTestData.USER_ID;
+import static ru.javawebinar.topjava.UserTestData.USER_MATCHER;
 
 @ActiveProfiles(Profiles.DATAJPA)
 public class DatajpaUserServiceTest extends UserServiceTest {
@@ -20,6 +21,7 @@ public class DatajpaUserServiceTest extends UserServiceTest {
     @Test
     public void getUserAndMeals() {
         User user = service.getUserMeals(USER_ID);
+        USER_MATCHER.assertMatch(user,user);
         MEAL_MATCHER.assertMatch(user.getMeals(), meals);
     }
 }
