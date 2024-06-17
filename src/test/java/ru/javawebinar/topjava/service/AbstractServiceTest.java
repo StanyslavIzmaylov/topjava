@@ -1,7 +1,7 @@
 package ru.javawebinar.topjava.service;
 
 import org.junit.AfterClass;
-import org.junit.ClassRule;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.rules.Stopwatch;
 import org.junit.runner.Description;
@@ -16,7 +16,6 @@ import ru.javawebinar.topjava.ActiveDbProfileResolver;
 
 import java.util.concurrent.TimeUnit;
 
-import static org.slf4j.LoggerFactory.getILoggerFactory;
 import static org.slf4j.LoggerFactory.getLogger;
 
 @ContextConfiguration({
@@ -27,11 +26,12 @@ import static org.slf4j.LoggerFactory.getLogger;
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 @ActiveProfiles(resolver = ActiveDbProfileResolver.class)
 public abstract class AbstractServiceTest {
-    protected static final StringBuilder results = new StringBuilder();
+    public static final StringBuilder results = new StringBuilder();
     protected static final Logger log = getLogger("result");
     @Rule
     // http://stackoverflow.com/questions/14892125/what-is-the-best-practice-to-determine-the-execution-time-of-the-bussiness-relev
     public final Stopwatch stopwatch = new Stopwatch() {
+
         @Override
         protected void finished(long nanos, Description description) {
             String result = String.format("\n%-25s %7d", description.getMethodName(), TimeUnit.NANOSECONDS.toMillis(nanos));
@@ -39,6 +39,12 @@ public abstract class AbstractServiceTest {
             log.info(result + " ms\n");
         }
     };
+
+    @BeforeClass
+    public static void before() throws Throwable {
+        results.setLength(0);
+    }
+
     @AfterClass
     public static void printResult() {
         log.info("\n---------------------------------" +
