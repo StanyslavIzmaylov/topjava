@@ -37,6 +37,7 @@ public class JspMealController extends AbstractMealController{
                 Integer.parseInt(request.getParameter("calories")));
 
         if (StringUtils.hasLength(request.getParameter("id"))) {
+            meal.setId(getId(request));
             service.update(meal, userId);
         } else {
             service.create(meal,userId);
@@ -74,10 +75,7 @@ public class JspMealController extends AbstractMealController{
     public String update(Model model, HttpServletRequest request) {
         int userId = SecurityUtil.authUserId();
         log.info("update");
-        Meal meal = new Meal(getId(request),
-                LocalDateTime.parse(request.getParameter("dateTime")),
-                request.getParameter("description"),
-                Integer.parseInt(request.getParameter("calories")));
+        Meal meal = service.get(getId(request),userId);
         model.addAttribute("meal", meal);
         return "mealForm";
     }
