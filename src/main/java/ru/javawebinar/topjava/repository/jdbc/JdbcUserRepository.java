@@ -2,7 +2,6 @@ package ru.javawebinar.topjava.repository.jdbc;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -100,9 +99,17 @@ public class JdbcUserRepository implements UserRepository {
 
     @Override
     public User get(int id) {
-        List<User> users = jdbcTemplate.query("SELECT * FROM users WHERE id=?", ROW_MAPPER, id);
-
-        return DataAccessUtils.singleResult(users);
+        List<User> users = jdbcTemplate.query("SELECT u.*, r.role as roles  FROM users u LEFT JOIN user_role r ON u.id = r.user_id WHERE id=?", ROW_MAPPER, id);
+        Set<Role> userRole = new HashSet<>();
+        if (users.isEmpty()){
+            return null;
+        }
+        for (User user : users){
+            userRole.addAll(user.getRoles());
+        }
+        User user = users.get(0);
+        user.setRoles(userRole);
+        return user;
     }
 
     @Override
@@ -111,10 +118,11 @@ public class JdbcUserRepository implements UserRepository {
 //        return jdbcTemplate.queryForObject("SELECT * FROM users WHERE email=?", ROW_MAPPER, email);
         List<User> users = jdbcTemplate.query("SELECT u.*, r.role as roles  FROM users u LEFT JOIN user_role r ON u.id = r.user_id WHERE u.email=?", ROW_MAPPER, email);
         Set<Role> userRole = new HashSet<>();
+
         for (User user : users){
             userRole.addAll(user.getRoles());
         }
-        User user = DataAccessUtils.singleResult(users);
+        User user = users.get(0);
         user.setRoles(userRole);
         return user;
     }
