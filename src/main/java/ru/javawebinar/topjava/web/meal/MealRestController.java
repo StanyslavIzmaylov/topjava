@@ -12,32 +12,6 @@ import java.util.List;
 
 @Controller
 public class MealRestController extends AbstractMealController{
-    private static final Logger log = LoggerFactory.getLogger(MealRestController.class);
-
-    @Override
-    public Meal get(int id) {
-        return super.get(id);
-    }
-
-    @Override
-    public void delete(int id) {
-        super.delete(id);
-    }
-
-    @Override
-    public List<MealTo> getAll() {
-        return super.getAll();
-    }
-
-    @Override
-    public Meal create(Meal meal) {
-        return super.create(meal);
-    }
-
-    @Override
-    public void update(Meal meal, int id) {
-        super.update(meal, id);
-    }
 
     @Override
     public List<MealTo> getBetween(LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
