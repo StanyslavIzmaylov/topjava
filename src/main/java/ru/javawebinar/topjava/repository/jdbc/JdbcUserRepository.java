@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
+import ru.javawebinar.topjava.util.ValidationUtil;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -55,13 +56,8 @@ public class JdbcUserRepository implements UserRepository {
     @Override
     @Transactional
     public User save(User user) {
+        ValidationUtil.getParametr(user,validator);
         BeanPropertySqlParameterSource parameterSource = new BeanPropertySqlParameterSource(user);
-
-        Set<ConstraintViolation<User>> argsViolations = validator.validate(user);
-        if (argsViolations.size() > 0) {
-            throw new ConstraintViolationException(argsViolations);
-        }
-
         if (user.isNew()) {
             Number newKey = insertUser.executeAndReturnKey(parameterSource);
             user.setId(newKey.intValue());
@@ -114,15 +110,14 @@ public class JdbcUserRepository implements UserRepository {
 
     @Override
     public User getByEmail(String email) {
-
-//        return jdbcTemplate.queryForObject("SELECT * FROM users WHERE email=?", ROW_MAPPER, email);
-        List<User> users = jdbcTemplate.query("SELECT u.*, r.role as roles  FROM users u LEFT JOIN user_role r ON u.id = r.user_id WHERE u.email=?", ROW_MAPPER, email);
+        List<User> users = jdbcTemplate.query("SELECT u.*, r.role as roles  FROM users u LEFT JOIN user_role r ON u.id = r.user_id WHERE u.email=?",
+                ROW_MAPPER, email);
         Set<Role> userRole = new HashSet<>();
 
         for (User user : users){
             userRole.addAll(user.getRoles());
         }
-        User user = users.get(0);
+        User user = users.getFirst();
         user.setRoles(userRole);
         return user;
     }
@@ -130,38 +125,25 @@ public class JdbcUserRepository implements UserRepository {
     @Override
     public List<User> getAll() {
 
-
-        return jdbcTemplate.query("SELECT u.*, r.role  FROM users u LEFT JOIN user_role r ON u.id = r.user_id ORDER BY name, email",
+        return jdbcTemplate.query("SELECT u.*, r.role as roles FROM users u LEFT JOIN user_role r ON u.id = r.user_id ORDER BY name, email",
                 new ResultSetExtractor<List<User>>() {
                     @Override
                     public List<User> extractData(ResultSet rs) throws SQLException, DataAccessException {
-                        List<User> users = new ArrayList<>();
                         Map<Integer, Set<Role>> roleMap = new HashMap<>();
                         Map<Integer, User> userMap = new HashMap<>();
-
                         while (rs.next()) {
-                            User user = new User();
-                            Integer userId = rs.getInt("id");
-                            user.setId(userId);
-                            user.setName(rs.getString("name"));
-                            user.setEmail(rs.getString("email"));
-                            user.setPassword(rs.getString("password"));
-                            user.setCaloriesPerDay(rs.getInt("calories_per_day"));
-                            user.setEnabled(rs.getBoolean("enabled"));
-                            user.setRegistered(rs.getDate("registered"));
-
-                            if (rs.getString("role") == null) {
-                                roleMap.put(userId, null);
+                            User user =  ROW_MAPPER.mapRow(rs, rs.getRow());
+                            if (rs.getString("roles") == null) {
+                                roleMap.put(user.getId(), null);
                             } else {
-                                Role role = Role.valueOf(rs.getString("role"));
-                                roleMap.putIfAbsent(userId, new HashSet<>());
-                                roleMap.get(userId).add(role);
+                                Role role = Role.valueOf(rs.getString("roles"));
+                                roleMap.putIfAbsent(user.getId(), new HashSet<>());
+                                roleMap.get(user.getId()).add(role);
                             }
-                            user.setRoles(roleMap.get(userId));
-
-                            userMap.put(userId, user);
+                            user.setRoles(roleMap.get(user.getId()));
+                            userMap.put(user.getId(), user);
                         }
-                        users.addAll(userMap.values());
+                        List<User> users = new ArrayList<>(userMap.values());
                         return users.stream()
                                 .sorted(Comparator.comparing(User::getName).thenComparing(User::getEmail)).toList();
                     }

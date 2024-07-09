@@ -1,12 +1,9 @@
 package ru.javawebinar.topjava.web.meal;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.javawebinar.topjava.model.Meal;
@@ -27,7 +24,7 @@ import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalTime;
 @RequestMapping(value = "/meals")
 public class JspMealController extends AbstractMealController {
 
-    @PostMapping("/meals")
+    @PostMapping()
     protected String updateOrCreate(HttpServletRequest request) {
         int userId = SecurityUtil.authUserId();
         Meal meal = new Meal(
@@ -41,7 +38,7 @@ public class JspMealController extends AbstractMealController {
         } else {
             service.create(meal, userId);
         }
-        return "redirect:meals";
+        return "redirect:/meals";
     }
 
     @GetMapping()
@@ -59,7 +56,7 @@ public class JspMealController extends AbstractMealController {
         log.info("delete");
         service.delete(getId(request), userId);
         model.addAttribute("meals", MealsUtil.getTos(service.getAll(userId), SecurityUtil.authUserCaloriesPerDay()));
-        return "redirect:meals";
+        return "redirect:/meals";
     }
 
     @GetMapping("/create")
