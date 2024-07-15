@@ -2,27 +2,19 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:cache="http://www.springframework.org/schema/cache"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:p="http://www.springframework.org/schema/p"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
          http://www.springframework.org/schema/beans/spring-beans.xsd
          http://www.springframework.org/schema/cache
-         http://www.springframework.org/schema/cache/spring-cache.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
+         http://www.springframework.org/schema/cache/spring-cache.xsd">
 
     <!-- enables scanning for @Cacheable annotation -->
-    <cache:annotation-driven cache-manager="cahceManager"/>
-
-
-    <bean id="cahceManager" class="org.springframework.cache.support.NoOpCacheManager" />
-
+    <cache:annotation-driven cache-manager="ehCacheManager"/>
 
     <!--https://imhoratiu.wordpress.com/2017/01/26/spring-4-with-ehcache-3-how-to/-->
-    <beans profile="jpa,datajpa">
-        <util:properties id="noCashwithHibbernate">
-            <prop key="entityManagerFactory.jpaPropertyMap['hibernate.cache.use_second_level_cache']">false</prop>
-        </util:properties>
-
-        <context:property-override properties-ref="noCashwithHibbernate"/>
-    </beans>
-
+    <bean id="ehCacheManager" class="org.springframework.cache.jcache.JCacheCacheManager">
+        <property name="cacheManager">
+            <bean class="org.springframework.cache.jcache.JCacheManagerFactoryBean" p:cacheManagerUri="classpath:cache/ehcache.xml"/>
+        </property>
+    </bean>
 </beans>
