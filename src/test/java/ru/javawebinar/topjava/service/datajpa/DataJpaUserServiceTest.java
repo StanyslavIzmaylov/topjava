@@ -19,22 +19,12 @@ import static ru.javawebinar.topjava.UserTestData.*;
 
 @ActiveProfiles(DATAJPA)
 public class DataJpaUserServiceTest extends AbstractUserServiceTest {
-    @Autowired
-    private CacheManager cacheManager;
 
-    @Autowired
-    protected JpaUtil jpaUtil;
-
-    @Before
-    public void setup() {
-        cacheManager.getCache("users").clear();
-        jpaUtil.clear2ndLevelHibernateCache();
-    }
     @Test
     public void getWithMeals() {
-        User user = service.getWithMeals(USER_ID);
-        USER_MATCHER.assertMatch(user, UserTestData.user);
-        MEAL_MATCHER.assertMatch(user.getMeals(), MealTestData.meals);
+        User user = service.getWithMeals(ADMIN_ID);
+        USER_MATCHER.assertMatch(user, admin);
+        MEAL_MATCHER.assertMatch(user.getMeals(), MealTestData.adminMeal1,MealTestData.adminMeal2);
     }
 
     @Test

@@ -1,11 +1,9 @@
 package ru.javawebinar.topjava.repository.jdbc;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -17,13 +15,12 @@ import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
 import ru.javawebinar.topjava.util.ValidationUtil;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import javax.validation.Validator;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Repository
 @Transactional(readOnly = true)
@@ -40,9 +37,6 @@ public class JdbcUserRepository implements UserRepository {
     private final DataSourceTransactionManager dataSourceTransactionManager;
 
     @Autowired
-    private Validator validator;
-
-    @Autowired
     public JdbcUserRepository(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate, DataSourceTransactionManager dataSourceTransactionManager) {
         this.insertUser = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("users")
@@ -56,7 +50,7 @@ public class JdbcUserRepository implements UserRepository {
     @Override
     @Transactional
     public User save(User user) {
-        ValidationUtil.getParametr(user,validator);
+        ValidationUtil.getParametr(user);
         BeanPropertySqlParameterSource parameterSource = new BeanPropertySqlParameterSource(user);
         if (user.isNew()) {
             Number newKey = insertUser.executeAndReturnKey(parameterSource);
@@ -96,57 +90,41 @@ public class JdbcUserRepository implements UserRepository {
     @Override
     public User get(int id) {
         List<User> users = jdbcTemplate.query("SELECT u.*, r.role as roles  FROM users u LEFT JOIN user_role r ON u.id = r.user_id WHERE id=?", ROW_MAPPER, id);
-        Set<Role> userRole = new HashSet<>();
-        if (users.isEmpty()){
+        if (users.isEmpty()) {
             return null;
         }
-        for (User user : users){
-            userRole.addAll(user.getRoles());
-        }
-        User user = users.get(0);
-        user.setRoles(userRole);
+        User user = users.getFirst();
+        user.setRoles(getUserRoles(id));
         return user;
     }
 
     @Override
     public User getByEmail(String email) {
-        List<User> users = jdbcTemplate.query("SELECT u.*, r.role as roles  FROM users u LEFT JOIN user_role r ON u.id = r.user_id WHERE u.email=?",
+        List<User> users = jdbcTemplate.query(
+                "SELECT u.*, r.role as roles  FROM users u LEFT JOIN user_role r ON u.id = r.user_id WHERE u.email=?",
                 ROW_MAPPER, email);
-        Set<Role> userRole = new HashSet<>();
-
-        for (User user : users){
-            userRole.addAll(user.getRoles());
-        }
         User user = users.getFirst();
-        user.setRoles(userRole);
+        user.setRoles(getUserRoles(user.getId()));
         return user;
     }
 
     @Override
     public List<User> getAll() {
+        List<User> users = jdbcTemplate.query("SELECT * FROM users ORDER BY name, email", ROW_MAPPER);
+        for (User user : users) {
+            user.setRoles(getUserRoles(user.getId()));
+        }
+        return users;
+    }
 
-        return jdbcTemplate.query("SELECT u.*, r.role as roles FROM users u LEFT JOIN user_role r ON u.id = r.user_id ORDER BY name, email",
-                new ResultSetExtractor<List<User>>() {
-                    @Override
-                    public List<User> extractData(ResultSet rs) throws SQLException, DataAccessException {
-                        Map<Integer, Set<Role>> roleMap = new HashMap<>();
-                        Map<Integer, User> userMap = new HashMap<>();
-                        while (rs.next()) {
-                            User user =  ROW_MAPPER.mapRow(rs, rs.getRow());
-                            if (rs.getString("roles") == null) {
-                                roleMap.put(user.getId(), null);
-                            } else {
-                                Role role = Role.valueOf(rs.getString("roles"));
-                                roleMap.putIfAbsent(user.getId(), new HashSet<>());
-                                roleMap.get(user.getId()).add(role);
-                            }
-                            user.setRoles(roleMap.get(user.getId()));
-                            userMap.put(user.getId(), user);
-                        }
-                        List<User> users = new ArrayList<>(userMap.values());
-                        return users.stream()
-                                .sorted(Comparator.comparing(User::getName).thenComparing(User::getEmail)).toList();
-                    }
-                });
+    public Set<Role> getUserRoles(Integer userId) {
+        List<User> users = jdbcTemplate.query(
+                "SELECT u.*, r.role as roles  FROM users u LEFT JOIN user_role r ON u.id = r.user_id WHERE user_id =?", ROW_MAPPER, userId);
+
+        Set<Role> userRole = new HashSet<>();
+        for (User user : users) {
+            userRole.addAll(user.getRoles());
+        }
+        return userRole;
     }
 }

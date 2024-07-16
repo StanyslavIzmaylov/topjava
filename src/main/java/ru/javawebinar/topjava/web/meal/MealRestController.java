@@ -12,9 +12,4 @@ import java.util.List;
 
 @Controller
 public class MealRestController extends AbstractMealController{
-
-    @Override
-    public List<MealTo> getBetween(LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
-        return super.getBetween(startDate, startTime, endDate, endTime);
-    }
 }

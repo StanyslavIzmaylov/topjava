@@ -41,7 +41,7 @@ public class JspMealController extends AbstractMealController {
         return "redirect:/meals";
     }
 
-    @GetMapping()
+    @GetMapping
     public String getAll(Model model) {
         int userId = SecurityUtil.authUserId();
         log.info("meals");
@@ -55,7 +55,6 @@ public class JspMealController extends AbstractMealController {
         int userId = SecurityUtil.authUserId();
         log.info("delete");
         service.delete(getId(request), userId);
-        model.addAttribute("meals", MealsUtil.getTos(service.getAll(userId), SecurityUtil.authUserCaloriesPerDay()));
         return "redirect:/meals";
     }
 
