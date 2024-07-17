@@ -2,10 +2,13 @@ package ru.javawebinar.topjava.repository.datajpa;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
+import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
+import ru.javawebinar.topjava.util.ValidationUtil;
+import ru.javawebinar.topjava.util.exception.NotFoundException;
 
-import java.util.List;
+import java.util.*;
 
 @Repository
 public class DataJpaUserRepository implements UserRepository {
@@ -44,6 +47,16 @@ public class DataJpaUserRepository implements UserRepository {
 
     @Override
     public User getWithMeals(int id) {
-        return crudRepository.getWithMeals(id);
+        ValidationUtil.checkNotFoundWithId(crudRepository.getWithMeals(id),id);
+        User user = crudRepository.getWithMeals(id);
+        Map<Integer, Meal> mealMap = new HashMap<>();
+        for (Meal meal : user.getMeals()) {
+            mealMap.put(meal.getId(), meal);
+        }
+        List<Meal> meals = new ArrayList<>();
+        meals.addAll(mealMap.values());
+        user.setMeals(meals);
+
+        return user;
     }
 }
