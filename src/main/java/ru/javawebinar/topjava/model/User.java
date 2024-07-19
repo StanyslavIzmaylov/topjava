@@ -67,10 +67,6 @@ public class User extends AbstractNamedEntity {
     @Range(min = 10, max = 10000)
     private int caloriesPerDay = DEFAULT_CALORIES_PER_DAY;
 
-    public void setMeals(List<Meal> meals) {
-        this.meals = meals;
-    }
-
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")//, cascade = CascadeType.REMOVE, orphanRemoval = true)
     @OrderBy("dateTime DESC")
     @OnDelete(action = OnDeleteAction.CASCADE) //https://stackoverflow.com/a/44988100/548473
@@ -149,24 +145,7 @@ public class User extends AbstractNamedEntity {
         return meals;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", email=" + email +
-                ", name=" + name +
-                ", enabled=" + enabled +
-                ", roles=" + roles +
-                ", caloriesPerDay=" + caloriesPerDay +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        User user = (User) o;
-        return enabled == user.enabled && caloriesPerDay == user.caloriesPerDay && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(registered, user.registered) && Objects.equals(roles, user.roles) && Objects.equals(meals, user.meals);
+    public void setMeals(List<Meal> meals) {
+        this.meals = meals;
     }
 }

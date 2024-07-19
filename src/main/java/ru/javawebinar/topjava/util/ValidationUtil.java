@@ -63,7 +63,7 @@ public class ValidationUtil {
         return rootCause != null ? rootCause : t;
     }
 
-    public static void getParametr(Object object) {
+    public static void checkArguments(Object object) {
         Set<ConstraintViolation<Object>> argsViolations = validator.validate(object);
         if (argsViolations.size() > 0) {
             throw new ConstraintViolationException(argsViolations);
