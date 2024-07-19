@@ -48,10 +48,11 @@ public class DataJpaUserRepository implements UserRepository {
     @Override
     public User getWithMeals(int id) {
         User user = crudRepository.getWithMeals(id);
-        if (user != null) {
-            List<Meal> meals = new ArrayList<>(new LinkedHashSet<>(user.getMeals()));
-            user.setMeals(meals);
-            return user;
-        } else return null;
+        if (user == null) {
+            return null;
+        }
+        List<Meal> meals = new ArrayList<>(new LinkedHashSet<>(user.getMeals()));
+        user.setMeals(meals);
+        return user;
     }
 }

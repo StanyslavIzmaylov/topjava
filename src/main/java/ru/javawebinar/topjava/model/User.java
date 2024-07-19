@@ -148,4 +148,16 @@ public class User extends AbstractNamedEntity {
     public void setMeals(List<Meal> meals) {
         this.meals = meals;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", email=" + email +
+                ", name=" + name +
+                ", enabled=" + enabled +
+                ", roles=" + roles +
+                ", caloriesPerDay=" + caloriesPerDay +
+                '}';
+    }
 }

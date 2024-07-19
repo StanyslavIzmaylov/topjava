@@ -28,7 +28,7 @@ import java.util.*;
 public class JdbcUserRepository implements UserRepository {
 
     private static final BeanPropertyRowMapper<User> ROW_MAPPER = BeanPropertyRowMapper.newInstance(User.class);
-
+    private static final BeanPropertyRowMapper<Role> ROW_MAPPER_ROLE = BeanPropertyRowMapper.newInstance(Role.class);
     private final JdbcTemplate jdbcTemplate;
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -90,9 +90,9 @@ public class JdbcUserRepository implements UserRepository {
 
     @Override
     public User get(int id) {
-        List <User> users  = jdbcTemplate.query("SELECT * FROM users WHERE id=?", ROW_MAPPER, id);
+        List<User> users = jdbcTemplate.query("SELECT * FROM users WHERE id=?", ROW_MAPPER, id);
         User user = DataAccessUtils.singleResult(users);
-        if (user == null){
+        if (user == null) {
             return null;
         }
         user.setRoles(getUserRoles(id));
@@ -104,7 +104,7 @@ public class JdbcUserRepository implements UserRepository {
         List<User> users = jdbcTemplate.query(
                 "SELECT * FROM users WHERE email=?", ROW_MAPPER, email);
         User user = DataAccessUtils.singleResult(users);
-        if (user == null){
+        if (user == null) {
             return null;
         }
         user.setRoles(getUserRoles(user.getId()));
@@ -117,19 +117,25 @@ public class JdbcUserRepository implements UserRepository {
                 new ResultSetExtractor<List<User>>() {
                     @Override
                     public List<User> extractData(ResultSet rs) throws SQLException, DataAccessException {
-                        Map<Integer, Set<Role>> roleMap = new LinkedHashMap<>();
+                        Map<Integer, Set<Role>> roleMap = new HashMap<>();
                         Map<Integer, User> userMap = new LinkedHashMap<>();
                         while (rs.next()) {
-                            User user =  ROW_MAPPER.mapRow(rs, rs.getRow());
-                            if (rs.getString("roles") == null) {
-                                roleMap.put(user.getId(), null);
+                            Integer userId = rs.getInt("id");
+                            User user;
+                            if (userMap.containsKey(userId)) {
+                                user = userMap.get(userId);
                             } else {
+                                user = ROW_MAPPER.mapRow(rs, rs.getRow());
+                            }
+                            if (rs.getString("roles") != null) {
                                 Role role = Role.valueOf(rs.getString("roles"));
                                 roleMap.putIfAbsent(user.getId(), new HashSet<>());
                                 roleMap.get(user.getId()).add(role);
                             }
+
                             user.setRoles(roleMap.get(user.getId()));
                             userMap.put(user.getId(), user);
+
                         }
                         List<User> users = new ArrayList<>(userMap.values());
                         return users;
@@ -138,13 +144,19 @@ public class JdbcUserRepository implements UserRepository {
     }
 
     public Set<Role> getUserRoles(Integer userId) {
-        List<User> users = jdbcTemplate.query(
-                "SELECT u.*, r.role as roles  FROM users u LEFT JOIN user_role r ON u.id = r.user_id WHERE user_id =?", ROW_MAPPER, userId);
-
-        Set<Role> userRole = new HashSet<>();
-        for (User user : users) {
-            userRole.addAll(user.getRoles());
-        }
-        return userRole;
+       return  jdbcTemplate.query(
+                "SELECT * FROM user_role WHERE user_id=?", new ResultSetExtractor<Set<Role>>() {
+                    @Override
+                    public Set<Role> extractData(ResultSet rs) throws SQLException, DataAccessException {
+                        Set<Role> usersRole = new LinkedHashSet<>();
+                        while (rs.next()) {
+                            if (rs.getString("role") != null) {
+                                Role role = Role.valueOf(rs.getString("role"));
+                                usersRole.add(role);
+                            }
+                        }
+                        return usersRole;
+                    }
+                },userId);
     }
 }
