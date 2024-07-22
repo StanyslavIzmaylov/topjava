@@ -28,7 +28,7 @@ import java.util.*;
 public class JdbcUserRepository implements UserRepository {
 
     private static final BeanPropertyRowMapper<User> ROW_MAPPER = BeanPropertyRowMapper.newInstance(User.class);
-    private static final BeanPropertyRowMapper<Role> ROW_MAPPER_ROLE = BeanPropertyRowMapper.newInstance(Role.class);
+
     private final JdbcTemplate jdbcTemplate;
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -122,7 +122,7 @@ public class JdbcUserRepository implements UserRepository {
                         while (rs.next()) {
                             Integer userId = rs.getInt("id");
                             User user;
-                            if (userMap.containsKey(userId)) {
+                            if (userMap.get(userId) != null) {
                                 user = userMap.get(userId);
                             } else {
                                 user = ROW_MAPPER.mapRow(rs, rs.getRow());
@@ -144,11 +144,11 @@ public class JdbcUserRepository implements UserRepository {
     }
 
     public Set<Role> getUserRoles(Integer userId) {
-       return  jdbcTemplate.query(
+        return jdbcTemplate.query(
                 "SELECT * FROM user_role WHERE user_id=?", new ResultSetExtractor<Set<Role>>() {
                     @Override
                     public Set<Role> extractData(ResultSet rs) throws SQLException, DataAccessException {
-                        Set<Role> usersRole = new LinkedHashSet<>();
+                        Set<Role> usersRole = EnumSet.noneOf(Role.class);
                         while (rs.next()) {
                             if (rs.getString("role") != null) {
                                 Role role = Role.valueOf(rs.getString("role"));
@@ -157,6 +157,6 @@ public class JdbcUserRepository implements UserRepository {
                         }
                         return usersRole;
                     }
-                },userId);
+                }, userId);
     }
 }
