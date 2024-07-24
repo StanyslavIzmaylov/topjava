@@ -90,10 +90,6 @@ public class MealRestControllerTest extends AbstractControllerTest {
 
     @Test
     void getBetween() throws Exception {
-//        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
-//        LocalDateTime localDateTimeEnd = parse("2020-01-31T10:00", formatter);
-//        LocalDateTime localDateTimeStart = parse("2020-01-29T23:00", formatter);
-
         perform(MockMvcRequestBuilders.get(REST_URL + "filter?startDateTime=" +     LocalDateTime.of(2020, Month.JANUARY, 30,9,0)
                 + "&endDateTime=" + LocalDateTime.of(2020, Month.JANUARY, 31,23,59)))
                 .andExpect(status().isOk())
