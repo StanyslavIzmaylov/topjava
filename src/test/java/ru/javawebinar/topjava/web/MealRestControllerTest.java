@@ -13,20 +13,15 @@ import ru.javawebinar.topjava.web.json.JsonUtil;
 import ru.javawebinar.topjava.web.meal.MealRestController;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.Month;
-import java.time.format.DateTimeFormatter;
 
-import static java.time.LocalDateTime.parse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.javawebinar.topjava.MealTestData.*;
-import static ru.javawebinar.topjava.UserTestData.*;
-import static ru.javawebinar.topjava.MealTestData.getNew;
-import static ru.javawebinar.topjava.MealTestData.getUpdated;
+import static ru.javawebinar.topjava.UserTestData.USER_ID;
+import static ru.javawebinar.topjava.UserTestData.user;
 
 
 public class MealRestControllerTest extends AbstractControllerTest {
@@ -90,12 +85,12 @@ public class MealRestControllerTest extends AbstractControllerTest {
 
     @Test
     void getBetween() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + "filter?startDateTime=" +     LocalDateTime.of(2020, Month.JANUARY, 30,9,0)
-                + "&endDateTime=" + LocalDateTime.of(2020, Month.JANUARY, 31,23,59)))
+        perform(MockMvcRequestBuilders.get(REST_URL + "filter?startDate=" + LocalDate.of(2020, 1, 29)
+                + "&startTime=" + LocalTime.of(0, 0) + "&endDate=" + LocalDate.of(2020, 2, 1) + "&endTime=" + LocalTime.of(23, 0)))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(MEAL_TO_MATCHER.contentJson(MealsUtil.getTos(meals,user.getCaloriesPerDay())));
+                .andExpect(MEAL_TO_MATCHER.contentJson(MealsUtil.getTos(meals, user.getCaloriesPerDay())));
 
     }
 }
