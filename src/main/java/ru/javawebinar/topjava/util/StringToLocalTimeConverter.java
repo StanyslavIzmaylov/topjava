@@ -10,6 +10,8 @@ public class StringToLocalTimeConverter implements Converter<String, LocalTime> 
 
     private String timePattern = "HH:mm";
 
+    private final DateTimeFormatter DATETIME_FORMATTER = DateTimeFormatter.ofPattern(timePattern);
+
     public String getTimePattern() {
         return timePattern;
     }
@@ -20,6 +22,6 @@ public class StringToLocalTimeConverter implements Converter<String, LocalTime> 
 
     @Override
     public LocalTime convert(String source) {
-        return LocalTime.parse(source, DateTimeFormatter.ofPattern(timePattern));
+        return LocalTime.parse(source, DATETIME_FORMATTER);
     }
 }
