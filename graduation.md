@@ -65,12 +65,14 @@ _Антуан де Сент-Экзюпери_
   Самая распространенная и грубая ошибка - не придерживаться этих простых правил.
     - **[15 тривиальных фактов о правильной работе с протоколом HTTP](https://habrahabr.ru/company/yandex/blog/265569/)
       **
-    - *
-      *[10 Best Practices for Better RESTful API](https://medium.com/@mwaysolutions/10-best-practices-for-better-restful-api-cbe81b06f291)
-      **
-    - *
-      *[REST resource hierarchy](https://stackoverflow.com/questions/20951419/what-are-best-practices-for-rest-nested-resources)
-      **
+    -
+        *
+    *[10 Best Practices for Better RESTful API](https://medium.com/@mwaysolutions/10-best-practices-for-better-restful-api-cbe81b06f291)
+    **
+    -
+        *
+    *[REST resource hierarchy](https://stackoverflow.com/questions/20951419/what-are-best-practices-for-rest-nested-resources)
+    **
     - [Лучшие практики разработки REST API: правила 1-7,15-17](https://tproger.ru/translations/luchshie-praktiki-razrabotki-rest-api-20-sovetov/)
 - 2.5: Разделение на роли я предпочитаю на уровне URL. Сразу и однозначно видно, какой API у админа, какое у
   пользователя (API админа начинается, например, с */admin/...*).

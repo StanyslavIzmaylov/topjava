@@ -8,20 +8,15 @@ import java.time.format.DateTimeFormatter;
 
 public class StringToLocalTimeConverter implements Converter<String, LocalTime> {
 
-    private String timePattern = "HH:mm";
+    private static String timePattern = "HH:mm";
 
-    private final DateTimeFormatter DATETIME_FORMATTER = DateTimeFormatter.ofPattern(timePattern);
-
-    public String getTimePattern() {
-        return timePattern;
-    }
-
-    public void setTimePattern(String timePattern) {
-        this.timePattern = timePattern;
-    }
+    private static final DateTimeFormatter DATETIME_FORMATTER = DateTimeFormatter.ofPattern(timePattern);
 
     @Override
     public LocalTime convert(String source) {
+        if (source.isEmpty() || source == null) {
+            return null;
+        }
         return LocalTime.parse(source, DATETIME_FORMATTER);
     }
 }

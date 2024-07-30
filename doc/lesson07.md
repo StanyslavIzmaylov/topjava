@@ -48,8 +48,10 @@
   не дублировать данные. Для оптимизации можно указать Hibernate делать запрос без
   distinct: [15.16.2. Using DISTINCT with entity queries](https://docs.jboss.org/hibernate/orm/5.2/userguide/html_single/Hibernate_User_Guide.html#hql-distinct)
 -
+
 Бага [HINT_PASS_DISTINCT_THROUGH does not work if 'hibernate.use_sql_comments=true'](https://hibernate.atlassian.net/browse/HHH-13280).
 При `hibernate.use_sql_comments=false` все работает - в SELECT нет DISTINCT.
+
 - Тест `DataJpaUserServiceTest.getWithMeals()` не работает для admin (у админа 2 роли, и еда при JOIN дублируется). ...
 
 #### Apply 7_06_HW6_jdbc_transaction_roles.patch

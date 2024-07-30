@@ -13,9 +13,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalDate;
-import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalTime;
-
 @RestController
 @RequestMapping(value = MealRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class MealRestController extends AbstractMealController {
@@ -58,10 +55,10 @@ public class MealRestController extends AbstractMealController {
 
     @GetMapping("/filter")
     public List<MealTo> getBetween(
-            @RequestParam(name = "startDate", required = false, defaultValue = "1000-12-31") LocalDate startDate,
-            @RequestParam(name = "startTime",required = false, defaultValue = "00:00") LocalTime startTime,
-            @RequestParam(name = "endDate",required = false, defaultValue = "3000-12-31") LocalDate endDate,
-            @RequestParam(name = "endTime",required = false, defaultValue = "23:59") LocalTime endTime) {
+            @RequestParam(name = "startDate", required = false) LocalDate startDate,
+            @RequestParam(name = "startTime", required = false) LocalTime startTime,
+            @RequestParam(name = "endDate", required = false) LocalDate endDate,
+            @RequestParam(name = "endTime", required = false) LocalTime endTime) {
         return super.getBetween(startDate, startTime, endDate, endTime);
     }
 }

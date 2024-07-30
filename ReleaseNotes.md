@@ -173,9 +173,11 @@
   Видео [Тестирование UserService через AssertJ](https://drive.google.com/open?id=1SPMkWMYPvpk9i0TA7ioa-9Sn1EGBtClD),
   время 1:53
 -
+
 сделал [видео с jQuery конвертерами и дефолтными группами валидации при сохранении в базу](https://drive.google.com/open?id=1tOMOdmaP5OQ7iynwC77bdXSs-13Ommax)
 -
 сделал [видео с новым `DelegatingPasswordEncoder` и Json READ/WRITE access](https://drive.google.com/file/d/1XZXvOThinzPw4EhigAUdo8-MWT_g8wOt/view?usp=sharing)
+
 - убрал `AccessType.PROPERTY` для `AbstractBaseEntity.id` (
   см. [fixed HHH-3718](https://hibernate.atlassian.net/browse/HHH-3718))
 - удалил `PasswordUtil`, возвращаю статус `NO_CONTENT` для REST delete, убрал группы валидации в `UserTo`
@@ -206,10 +208,12 @@
       параметра (`JsonUtil.writeWithExtraProps`)
     - **убрал JSON View и сделал преобразование времени на UI с
       помощью [jQuery converters](http://api.jquery.com/jQuery.ajax/#using-converters)**
-    - *
-      *поменял [группу валидации по умолчанию при сохранении через JPA](https://stackoverflow.com/questions/16930623/16930663#16930663).
-      ** Теперь
-      все валидаторы в модели работаю по умолчанию (`groups` не требуется).
+    -
+        *
+    *
+    поменял [группу валидации по умолчанию при сохранении через JPA](https://stackoverflow.com/questions/16930623/16930663#16930663).
+    ** Теперь
+    все валидаторы в модели работаю по умолчанию (`groups` не требуется).
     - Добавил в `ErrorInfo` тип ошибки `ErrorType` + i18n.
 
 - правки
@@ -229,7 +233,7 @@
       и [через jsonPath](https://www.petrikainulainen.net/programming/spring-framework/integration-testing-of-spring-mvc-applications-write-clean-assertions-with-jsonpath/)
     - [логирование от Postgres Driver](http://stackoverflow.com/a/43242620/548473)
     -
-    в `.travis.yml` [сборку только ветки master](https://docs.travis-ci.com/user/customizing-the-build#Building-Specific-Branches)
+  в `.travis.yml` [сборку только ветки master](https://docs.travis-ci.com/user/customizing-the-build#Building-Specific-Branches)
     - [защиту от кэширование ajax запросов в IE](https://stackoverflow.com/a/4303862/548473)
     - обработку запрета модификации системный юзеров через универсальный `ApplicationException`
 - рефакторинг
@@ -275,8 +279,8 @@
     - изменил `JdbcUserRepositoryImpl.getAll()`
     - обновил jQuery до 3.x, исключил из зависимостей webjars ненужные jQuery
     -
-    cделал <a href="http://stackoverflow.com/questions/436411/where-should-i-put-script-tags-in-html-markup/24070373#24070373">
-    загрузку скриптов асинхронной</a>
+  cделал <a href="http://stackoverflow.com/questions/436411/where-should-i-put-script-tags-in-html-markup/24070373#24070373">
+  загрузку скриптов асинхронной</a>
     - фильтр еды сделал в [Bootstrap Panels](http://getbootstrap.com/components/#panels)
     - вместо `Persistable` ввел интерфейс `HasId` и наследую от него как Entity, так и TO
     - сделал универсальную обработку исключений дублирования email и dateTime
