@@ -9,6 +9,12 @@ function makeEditable(datatableApi) {
         }
     });
 
+    $(".enable").click(function () {
+            if (confirm('Are you sure?')) {
+                setEneblead($(this).closest('tr').attr("id"),$(this).prop('checked'));
+            }
+    });
+
     $(document).ajaxError(function (event, jqXHR, options, jsExc) {
         failNoty(jqXHR);
     });
@@ -32,6 +38,18 @@ function deleteRow(id) {
     });
 }
 
+function setEneblead(id,eneble) {
+    $.ajax({
+        url: ctx.ajaxUrl + id + "?eneblad="+eneble,
+        type: "POST",
+        dataType: 'json',
+        data:eneble,
+    }).done(function () {
+        updateTable();
+        successNoty("Applly");
+    });
+}
+
 function updateTable() {
     $.get(ctx.ajaxUrl, function (data) {
         ctx.datatableApi.clear().rows.add(data).draw();
@@ -49,7 +67,18 @@ function save() {
         successNoty("Saved");
     });
 }
-
+function filter() {
+    $('#filter').on('submit',function (e) {
+    $.ajax({
+        type: "GET",
+        url: "js/meals/filter",
+        data:   $("#filter").serialize()
+    }).done(function (data) {
+        ctx.datatableApi.clear().rows.add(data).draw();
+    });
+        e.preventDefault();
+    });
+}
 let failedNote;
 
 function closeNoty() {

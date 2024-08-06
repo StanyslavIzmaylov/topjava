@@ -22,7 +22,13 @@ tr[data-meal-excess="false"] {
 tr[data-meal-excess="true"] {
     color: red;
 }
+tr[data-user-excess="false"] {
+    color: red;
+}
 
+tr[data-user-excess="true"] {
+    color: green;
+}
 .fa {
     cursor: pointer;
 }
