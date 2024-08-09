@@ -56,6 +56,7 @@ public class UserService {
         return checkNotFoundWithId(repository.getWithMeals(id), id);
     }
 
+    @CacheEvict(value = "users", allEntries = true)
     public boolean setEnableDisable(int id, boolean enabled){
         repository.setEnableDisable(id,enabled);
         return enabled;

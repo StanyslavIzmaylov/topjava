@@ -73,8 +73,4 @@ public class JpaUserRepository implements UserRepository {
                 .getResultList();
     }
 
-    @Override
-    public boolean setEnableDisable(int id, boolean enabled) {
-        return false;
-    }
 }

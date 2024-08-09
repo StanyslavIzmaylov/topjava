@@ -10,9 +10,9 @@ function makeEditable(datatableApi) {
     });
 
     $(".enable").click(function () {
-            if (confirm('Are you sure?')) {
-                setEneblead($(this).closest('tr').attr("id"),$(this).prop('checked'));
-            }
+        if (confirm('Are you sure?')) {
+            setEneblead($(this).closest('tr').attr("id"), $(this).prop('checked'));
+        }
     });
 
     $(document).ajaxError(function (event, jqXHR, options, jsExc) {
@@ -38,12 +38,11 @@ function deleteRow(id) {
     });
 }
 
-function setEneblead(id,eneble) {
+function setEneblead(id, enabled) {
     $.ajax({
-        url: ctx.ajaxUrl + id + "?eneblad="+eneble,
+        url: ctx.ajaxUrl + id + "?enabled=" + enabled,
         type: "POST",
-        dataType: 'json',
-        data:eneble,
+        data: enabled,
     }).done(function () {
         updateTable();
         successNoty("Applly");
@@ -67,18 +66,20 @@ function save() {
         successNoty("Saved");
     });
 }
+
 function filter() {
-    $('#filter').on('submit',function (e) {
-    $.ajax({
-        type: "GET",
-        url: "js/meals/filter",
-        data:   $("#filter").serialize()
-    }).done(function (data) {
-        ctx.datatableApi.clear().rows.add(data).draw();
-    });
+    $('#filter').on('submit', function (e) {
+        $.ajax({
+            type: "GET",
+            url: "js/meals/filter",
+            data: $("#filter").serialize()
+        }).done(function (data) {
+            ctx.datatableApi.clear().rows.add(data).draw();
+        });
         e.preventDefault();
     });
 }
+
 let failedNote;
 
 function closeNoty() {

@@ -30,6 +30,7 @@ public class UserTestData {
     public static final User admin = new User(ADMIN_ID, "Admin", "admin@gmail.com", "admin", Role.ADMIN, Role.USER);
     public static final User guest = new User(GUEST_ID, "Guest", "guest@gmail.com", "guest");
 
+
     static {
         user.setMeals(meals);
         admin.setMeals(List.of(adminMeal2, adminMeal1));
@@ -48,5 +49,11 @@ public class UserTestData {
         updated.setEnabled(false);
         updated.setRoles(Collections.singletonList(Role.ADMIN));
         return updated;
+    }
+
+    public static User getEnabled() {
+        User enabled = new User(user);
+        enabled.setEnabled(false);
+        return enabled;
     }
 }

@@ -3,11 +3,13 @@ package ru.javawebinar.topjava.web.user;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.javawebinar.topjava.model.User;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -62,8 +64,8 @@ public class AdminRestController extends AbstractUserController {
         return super.getWithMeals(id);
     }
 
-//    @PostMapping(value = )
-//    public boolean setEnableDisable(@RequestBody User user) {
-//        return super.setEnableDisable(user.getId(), user.isEnabled());
-//    }
+    @PostMapping("/{id}")
+    public boolean setEnableDisable(@PathVariable int id, @RequestParam boolean enabled) {
+        return super.setEnableDisable(id, enabled);
+    }
 }
