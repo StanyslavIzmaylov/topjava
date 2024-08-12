@@ -50,6 +50,16 @@ function setEneblead(id, enabled) {
 }
 
 function updateTable() {
+    $.ajax({
+        type: "GET",
+        url: "js/meals/filter",
+        data: $("#filter").serialize()
+    }).done(function (data) {
+        ctx.datatableApi.clear().rows.add(data).draw();
+    });
+}
+
+function cleanTable() {
     $.get(ctx.ajaxUrl, function (data) {
         ctx.datatableApi.clear().rows.add(data).draw();
     });

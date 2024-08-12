@@ -32,7 +32,7 @@
             <span class="fa fa-plus"></span>
             <spring:message code="meal.filter"/>
         </button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="updateTable()">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="cleanTable()">
             <span class="fa fa-close"></span>
             <spring:message code="common.cancel"/>
         </button>
