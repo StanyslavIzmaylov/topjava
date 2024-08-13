@@ -56,6 +56,6 @@ public abstract class AbstractUserController {
 
     public boolean setEnableDisable(int id, boolean enabled) {
         log.info("setEnableDisable {}", id);
-        return service.setEnableDisable(id,enabled);
+        return service.setEnableDisable(id, enabled);
     }
 }

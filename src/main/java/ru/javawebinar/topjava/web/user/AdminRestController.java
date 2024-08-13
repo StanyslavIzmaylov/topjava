@@ -64,7 +64,7 @@ public class AdminRestController extends AbstractUserController {
         return super.getWithMeals(id);
     }
 
-    @PostMapping("/{id}")
+    @PatchMapping("/{id}")
     public boolean setEnableDisable(@PathVariable int id, @RequestParam boolean enabled) {
         return super.setEnableDisable(id, enabled);
     }

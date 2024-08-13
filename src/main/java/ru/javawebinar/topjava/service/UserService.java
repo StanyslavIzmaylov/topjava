@@ -57,8 +57,10 @@ public class UserService {
     }
 
     @CacheEvict(value = "users", allEntries = true)
-    public boolean setEnableDisable(int id, boolean enabled){
-        repository.setEnableDisable(id,enabled);
+    public boolean setEnableDisable(int id, boolean enabled) {
+        User user = repository.get(id);
+        user.setEnabled(enabled);
+        repository.save(user);
         return enabled;
     }
 }

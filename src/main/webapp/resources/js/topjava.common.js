@@ -33,35 +33,8 @@ function deleteRow(id) {
         url: ctx.ajaxUrl + id,
         type: "DELETE"
     }).done(function () {
-        updateTable();
+        updateDate();
         successNoty("Deleted");
-    });
-}
-
-function setEneblead(id, enabled) {
-    $.ajax({
-        url: ctx.ajaxUrl + id + "?enabled=" + enabled,
-        type: "POST",
-        data: enabled,
-    }).done(function () {
-        updateTable();
-        successNoty("Applly");
-    });
-}
-
-function updateTable() {
-    $.ajax({
-        type: "GET",
-        url: "js/meals/filter",
-        data: $("#filter").serialize()
-    }).done(function (data) {
-        ctx.datatableApi.clear().rows.add(data).draw();
-    });
-}
-
-function cleanTable() {
-    $.get(ctx.ajaxUrl, function (data) {
-        ctx.datatableApi.clear().rows.add(data).draw();
     });
 }
 
@@ -72,21 +45,8 @@ function save() {
         data: form.serialize()
     }).done(function () {
         $("#editRow").modal("hide");
-        updateTable();
+        updateDate();
         successNoty("Saved");
-    });
-}
-
-function filter() {
-    $('#filter').on('submit', function (e) {
-        $.ajax({
-            type: "GET",
-            url: "js/meals/filter",
-            data: $("#filter").serialize()
-        }).done(function (data) {
-            ctx.datatableApi.clear().rows.add(data).draw();
-        });
-        e.preventDefault();
     });
 }
 
