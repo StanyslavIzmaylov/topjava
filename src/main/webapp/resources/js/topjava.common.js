@@ -9,12 +9,6 @@ function makeEditable(datatableApi) {
         }
     });
 
-    $(".enable").click(function () {
-        if (confirm('Are you sure?')) {
-            setEneblead($(this).closest('tr').attr("id"), $(this).prop('checked'));
-        }
-    });
-
     $(document).ajaxError(function (event, jqXHR, options, jsExc) {
         failNoty(jqXHR);
     });
@@ -33,7 +27,7 @@ function deleteRow(id) {
         url: ctx.ajaxUrl + id,
         type: "DELETE"
     }).done(function () {
-        updateDate();
+       ctx.updateDate();
         successNoty("Deleted");
     });
 }
@@ -45,7 +39,7 @@ function save() {
         data: form.serialize()
     }).done(function () {
         $("#editRow").modal("hide");
-        updateDate();
+        ctx.updateDate();
         successNoty("Saved");
     });
 }

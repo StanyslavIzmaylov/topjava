@@ -2,10 +2,9 @@ const userAjaxUrl = "admin/users/";
 
 // https://stackoverflow.com/a/5064235/548473
 const ctx = {
-    ajaxUrl: userAjaxUrl
+    ajaxUrl: userAjaxUrl,
+    updateDate: updateTable
 };
-
-const updateDate = updateTable;
 
 function updateTable() {
     $.get(ctx.ajaxUrl, function (data) {
@@ -13,7 +12,7 @@ function updateTable() {
     });
 }
 
-function setEneblead(id, enabled) {
+function setEnabled(id, enabled) {
     $.ajax({
         url: ctx.ajaxUrl + id + "?enabled=" + enabled,
         type: "POST",
@@ -26,6 +25,11 @@ function setEneblead(id, enabled) {
 
 // $(document).ready(function () {
 $(function () {
+    $(".enable").click(function () {
+        if (confirm('Are you sure?')) {
+            setEnabled($(this).closest('tr').attr("id"), $(this).prop('checked'));
+        }
+    });
     makeEditable(
         $("#datatable").DataTable({
             "paging": false,

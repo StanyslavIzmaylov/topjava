@@ -102,6 +102,6 @@ class AdminRestControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk());
 
-        USER_MATCHER.assertMatch(userService.get(USER_ID), getEnabled());
+        USER_MATCHER.assertMatch(userService.get(USER_ID), getDisabled());
     }
 }

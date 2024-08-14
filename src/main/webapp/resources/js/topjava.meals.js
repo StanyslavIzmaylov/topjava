@@ -1,30 +1,27 @@
 const mealAjaxUrl = "js/meals/";
 
-const updateDate = updateTableWithFilter;
 
 // https://stackoverflow.com/a/5064235/548473
 const ctx = {
-    ajaxUrl: mealAjaxUrl
+    ajaxUrl: mealAjaxUrl,
+    updateDate: updateTableWithFilter,
+    updateAll:updateTableDate
 };
 
-function filter() {
-    $('#filter').click(function (e) {
+function filter(e) {
         $.ajax({
             type: "GET",
             url: ctx.ajaxUrl + "filter",
             data: $("#filter").serialize()
-        }).done(function (data) {
-            ctx.datatableApi.clear().rows.add(data).draw();
-        });
+        }).done(ctx.updateAll);
         e.preventDefault();
-    });
 }
-
-function cleanTable() {
+function updateTableDate(data) {
+    ctx.datatableApi.clear().rows.add(data).draw();
+}
+function cleanFilter() {
     $('#filter')[0].reset();
-    $.get(ctx.ajaxUrl, function (data) {
-        ctx.datatableApi.clear().rows.add(data).draw();
-    });
+    $.get(ctx.ajaxUrl,ctx.updateAll);
 }
 
 function updateTableWithFilter() {
@@ -32,9 +29,7 @@ function updateTableWithFilter() {
             type: "GET",
             url: ctx.ajaxUrl + "filter",
             data: $("#filter").serialize()
-        }).done(function (data) {
-            ctx.datatableApi.clear().rows.add(data).draw();
-        });
+        }).done(ctx.updateAll);
 }
 
 // $(document).ready(function () {
@@ -65,7 +60,7 @@ $(function () {
             "order": [
                 [
                     0,
-                    "dsc"
+                    "desc"
                 ]
             ]
         })
