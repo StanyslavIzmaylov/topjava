@@ -1,16 +1,10 @@
 package ru.javawebinar.topjava.to;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 import java.beans.ConstructorProperties;
-import java.io.Serial;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class MealTo extends BaseTo implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 1L;
+public class MealTo extends BaseTo {
 
     private final LocalDateTime dateTime;
 

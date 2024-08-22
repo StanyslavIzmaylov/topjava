@@ -7,6 +7,9 @@
 <body>
 <script type="text/javascript" src="resources/js/topjava.common.js" defer></script>
 <script type="text/javascript" src="resources/js/topjava.meals.js" defer></script>
+<link rel="stylesheet" type="text/css" href="/jquery.datetimepicker.css"/>
+<script src="/jquery.js"></script>
+<script src="/build/jquery.datetimepicker.full.min.js"></script>
 <jsp:include page="fragments/bodyHeader.jsp"/>
 
 <div class="jumbotron pt-4">
@@ -30,8 +33,8 @@
                             <input class="form-control" type="time" name="startTime" id="startTime">
                         </div>
                         <div class="col-2">
-                            <label for="endTime"><spring:message code="meal.endTime"/></label>
-                            <input class="form-control" type="time" name="endTime" id="endTime">
+                            <label for="datetimepicker"><spring:message code="meal.endTime"/></label>
+                            <input class="form-control" type="text" name="endTime" id="datetimepicker">
                         </div>
                     </div>
                 </form>
