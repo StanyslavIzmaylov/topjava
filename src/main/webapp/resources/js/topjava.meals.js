@@ -12,6 +12,67 @@ const ctx = {
     }
 };
 
+$(function () {
+    $('#datetimepicker4').datetimepicker({
+        i18n:{
+            de:{
+                months:[
+                    'Januar','Februar','März','April',
+                    'Mai','Juni','Juli','August',
+                    'September','Oktober','November','Dezember',
+                ],
+                dayOfWeek:[
+                    "So.", "Mo", "Di", "Mi",
+                    "Do", "Fr", "Sa.",
+                ]
+            }
+        },
+        timepicker:false,
+        format:'Y-m-d'
+    });
+});
+
+$(function () {
+    $('#datetimepicker3').datetimepicker({
+        i18n:{
+            de:{
+                months:[
+                    'Januar','Februar','März','April',
+                    'Mai','Juni','Juli','August',
+                    'September','Oktober','November','Dezember',
+                ],
+                dayOfWeek:[
+                    "So.", "Mo", "Di", "Mi",
+                    "Do", "Fr", "Sa.",
+                ]
+            }
+        },
+        timepicker:false,
+        format:'Y-m-d'
+    });
+});
+
+$(function () {
+    $('#datetimepicker2').datetimepicker({
+        datepicker: false,
+        format: 'H:i',
+    });
+});
+$(function () {
+    $('#datetimepicker').datetimepicker({
+        datepicker: false,
+        format: 'H:i',
+    });
+});
+
+$(function () {
+    $('#datetimepicker5').datetimepicker({
+        format:'Y-m-d H:i',
+        inline:true,
+        lang:'ru'
+    });
+});
+
 function clearFilter() {
     $("#filter")[0].reset();
     $.get(mealAjaxUrl, updateTableByData);
@@ -29,15 +90,7 @@ $(function () {
             "columns": [
                 {
                     "data": "dateTime",
-                    "render": function (date, type, row) {
-                        if (type === "display") {
-                            var dateTime = date.split('T');
-                            var dateSplit = dateTime[0];
-                            var time = dateTime[1].substring(0, 5)
-                            return dateSplit + " " + time;
-                        }
-                        return date;
-                    }
+
                 },
                 {
                     "data": "description"

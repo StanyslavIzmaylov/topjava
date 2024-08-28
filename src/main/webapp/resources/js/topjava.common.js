@@ -12,13 +12,6 @@ function makeEditable(datatableApi) {
     $.ajaxSetup({cache: false});
 }
 
-$(function () {
-    $('#datetimepicker').datetimepicker({
-        datepicker: false,
-        format: 'H:i',
-    });
-});
-
 function add() {
     $("#modalTitle").html(i18n["addTitle"]);
     form.find(":input").val("");
