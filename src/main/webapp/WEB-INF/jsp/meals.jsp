@@ -21,20 +21,20 @@
                 <form id="filter">
                     <div class="row">
                         <div class="col-3">
-                            <label for="datetimepicker4"><spring:message code="meal.startDate"/></label>
-                            <input class="form-control" type="text" name="startDate" id="datetimepicker4">
+                            <label for="startDate"><spring:message code="meal.startDate"/></label>
+                            <input class="form-control" type="text" name="startDate" id="startDate">
                         </div>
                         <div class="col-3">
-                            <label for="datetimepicker3"><spring:message code="meal.endDate"/></label>
-                            <input class="form-control" type="text" name="endDate" id="datetimepicker3">
+                            <label for="endDate"><spring:message code="meal.endDate"/></label>
+                            <input class="form-control" type="text" name="endDate" id="endDate">
                         </div>
                         <div class="offset-2 col-2">
-                            <label for="datetimepicker2"><spring:message code="meal.startTime"/></label>
-                            <input class="form-control" type="text" name="startTime" id="datetimepicker2">
+                            <label for="startTime"><spring:message code="meal.startTime"/></label>
+                            <input class="form-control" type="text" name="startTime" id="startTime">
                         </div>
                         <div class="col-2">
-                            <label for="datetimepicker"><spring:message code="meal.endTime"/></label>
-                            <input class="form-control" type="text" name="endTime" id="datetimepicker">
+                            <label for="endTime"><spring:message code="meal.endTime"/></label>
+                            <input class="form-control" type="text" name="endTime" id="endTime">
                         </div>
                     </div>
                 </form>
@@ -96,8 +96,8 @@
                     <input type="hidden" id="id" name="id">
 
                     <div class="form-group">
-                        <label for="datetimepicker5" class="col-form-label"><spring:message code="meal.dateTime"/></label>
-                        <input type="text" class="form-control" id="datetimepicker5" name="dateTime"
+                        <label for="dateTime" class="col-form-label" id="dateFormat"><spring:message code="meal.dateTime"/></label>
+                        <input type="text" class="form-control" id="dateTime" name="dateTime"
                                placeholder="<spring:message code="meal.dateTime"/>">
                     </div>
 
@@ -129,13 +129,5 @@
 </div>
 <jsp:include page="fragments/footer.jsp"/>
 </body>
-<script type="text/javascript">
-    const i18n = {}; // https://learn.javascript.ru/object
-    i18n["addTitle"] = '<spring:message code="meal.add"/>';
-    i18n["editTitle"] = '<spring:message code="meal.edit"/>';
-
-    <c:forEach var="key" items='${["common.deleted","common.saved","common.errorStatus","common.confirm"]}'>
-    i18n["${key}"] = "<spring:message code="${key}"/>";
-    </c:forEach>
-</script>
+<jsp:include page="fragments/118i.jsp"/>
 </html>

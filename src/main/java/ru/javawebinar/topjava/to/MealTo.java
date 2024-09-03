@@ -5,6 +5,8 @@ import org.hibernate.validator.constraints.Range;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.beans.ConstructorProperties;
 import java.time.LocalDateTime;
@@ -21,6 +23,7 @@ public class MealTo extends BaseTo {
     private String description;
 
     @Range(min = 10, max = 5000)
+    @NotNull
     private int calories;
 
     private boolean excess;

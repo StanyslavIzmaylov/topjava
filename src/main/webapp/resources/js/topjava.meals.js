@@ -12,8 +12,58 @@ const ctx = {
     }
 };
 
+$.ajaxSetup({
+    converters: {
+        "text json": function (stringData) {
+            return JSON.parse(stringData,
+                function (key, value) {
+                    return (key === 'dateTime') ? value.substring(0, 16).replace('T', ' ') : value;
+                }
+            );
+        }
+    }
+});
+
 $(function () {
-    $('#datetimepicker4').datetimepicker({
+    $('#startDate').datetimepicker({
+        i18n:{
+            de:{
+                months:[
+                    'Januar','Februar','März','April',
+                    'Mai','Juni','Juli','August',
+                    'September','Oktober','November','Dezember',
+                ],
+                dayOfWeek:[
+                    "So.", "Mo", "Di", "Mi",
+                    "Do", "Fr", "Sa.",
+                ]
+            }
+        },
+        timepicker:false,
+        format:'Y-m-d'
+    });
+});
+$(function () {
+    $('#startDate').datetimepicker({
+        i18n:{
+            de:{
+                months:[
+                    'Januar','Februar','März','April',
+                    'Mai','Juni','Juli','August',
+                    'September','Oktober','November','Dezember',
+                ],
+                dayOfWeek:[
+                    "So.", "Mo", "Di", "Mi",
+                    "Do", "Fr", "Sa.",
+                ]
+            }
+        },
+        timepicker:false,
+        format:'Y-m-d'
+    });
+});
+$(function () {
+    $('#endDate').datetimepicker({
         i18n:{
             de:{
                 months:[
@@ -33,42 +83,21 @@ $(function () {
 });
 
 $(function () {
-    $('#datetimepicker3').datetimepicker({
-        i18n:{
-            de:{
-                months:[
-                    'Januar','Februar','März','April',
-                    'Mai','Juni','Juli','August',
-                    'September','Oktober','November','Dezember',
-                ],
-                dayOfWeek:[
-                    "So.", "Mo", "Di", "Mi",
-                    "Do", "Fr", "Sa.",
-                ]
-            }
-        },
-        timepicker:false,
-        format:'Y-m-d'
-    });
-});
-
-$(function () {
-    $('#datetimepicker2').datetimepicker({
+    $('#startTime').datetimepicker({
         datepicker: false,
         format: 'H:i',
     });
 });
 $(function () {
-    $('#datetimepicker').datetimepicker({
+    $('#endTime').datetimepicker({
         datepicker: false,
         format: 'H:i',
     });
 });
 
 $(function () {
-    $('#datetimepicker5').datetimepicker({
+    $('#dateTime').datetimepicker({
         format:'Y-m-d H:i',
-        inline:true,
         lang:'ru'
     });
 });
@@ -117,9 +146,7 @@ $(function () {
                 ]
             ],
             "createdRow": function (row, data, dataIndex) {
-                if (!data.excess) {
-                    $(row).attr("data-meal-excess", false);
-                } else $(row).attr("data-meal-excess", true);
+                    $(row).attr("data-meal-excess", data.excess);
             }
         })
     );
