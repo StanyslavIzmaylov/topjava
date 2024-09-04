@@ -18,12 +18,8 @@ public class MealTo extends BaseTo {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime dateTime;
 
-    @NotBlank
-    @Size(min = 2, max = 120)
     private String description;
 
-    @Range(min = 10, max = 5000)
-    @NotNull
     private int calories;
 
     private boolean excess;

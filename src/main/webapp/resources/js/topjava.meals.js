@@ -26,8 +26,6 @@ $.ajaxSetup({
 
 $(function () {
     $('#startDate').datetimepicker({
-        i18n:{
-            de:{
                 months:[
                     'Januar','Februar','März','April',
                     'Mai','Juni','Juli','August',
@@ -36,36 +34,13 @@ $(function () {
                 dayOfWeek:[
                     "So.", "Mo", "Di", "Mi",
                     "Do", "Fr", "Sa.",
-                ]
-            }
-        },
-        timepicker:false,
-        format:'Y-m-d'
-    });
-});
-$(function () {
-    $('#startDate').datetimepicker({
-        i18n:{
-            de:{
-                months:[
-                    'Januar','Februar','März','April',
-                    'Mai','Juni','Juli','August',
-                    'September','Oktober','November','Dezember',
                 ],
-                dayOfWeek:[
-                    "So.", "Mo", "Di", "Mi",
-                    "Do", "Fr", "Sa.",
-                ]
-            }
-        },
         timepicker:false,
         format:'Y-m-d'
     });
 });
 $(function () {
     $('#endDate').datetimepicker({
-        i18n:{
-            de:{
                 months:[
                     'Januar','Februar','März','April',
                     'Mai','Juni','Juli','August',
@@ -74,9 +49,7 @@ $(function () {
                 dayOfWeek:[
                     "So.", "Mo", "Di", "Mi",
                     "Do", "Fr", "Sa.",
-                ]
-            }
-        },
+                ],
         timepicker:false,
         format:'Y-m-d'
     });
