@@ -1,6 +1,7 @@
 package ru.javawebinar.topjava.util;
 
 import org.hibernate.proxy.HibernateProxy;
+import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.validation.BindingResult;
 
@@ -11,11 +12,11 @@ public class Util {
     private Util() {
     }
 
-    public static String BindingMessage(BindingResult result){
+    public static ResponseEntity<String> entityErrorMessage(BindingResult result){
            String errorFieldsMsg = result.getFieldErrors().stream()
                 .map(fe -> String.format("[%s] %s", fe.getField(), fe.getDefaultMessage()))
                 .collect(Collectors.joining("<br>"));
-           return errorFieldsMsg;
+        return ResponseEntity.unprocessableEntity().body(errorFieldsMsg);
     }
 
     public static <T extends Comparable<T>> boolean isBetweenHalfOpen(T value, @Nullable T start, @Nullable T end) {

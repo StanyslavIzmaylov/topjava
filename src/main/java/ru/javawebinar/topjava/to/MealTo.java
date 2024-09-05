@@ -15,7 +15,6 @@ import java.util.Objects;
 public class MealTo extends BaseTo {
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime dateTime;
 
     private String description;

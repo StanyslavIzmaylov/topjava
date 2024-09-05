@@ -26,30 +26,12 @@ $.ajaxSetup({
 
 $(function () {
     $('#startDate').datetimepicker({
-                months:[
-                    'Januar','Februar','März','April',
-                    'Mai','Juni','Juli','August',
-                    'September','Oktober','November','Dezember',
-                ],
-                dayOfWeek:[
-                    "So.", "Mo", "Di", "Mi",
-                    "Do", "Fr", "Sa.",
-                ],
         timepicker:false,
         format:'Y-m-d'
     });
 });
 $(function () {
     $('#endDate').datetimepicker({
-                months:[
-                    'Januar','Februar','März','April',
-                    'Mai','Juni','Juli','August',
-                    'September','Oktober','November','Dezember',
-                ],
-                dayOfWeek:[
-                    "So.", "Mo", "Di", "Mi",
-                    "Do", "Fr", "Sa.",
-                ],
         timepicker:false,
         format:'Y-m-d'
     });
