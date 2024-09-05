@@ -12,8 +12,8 @@ public class Util {
     private Util() {
     }
 
-    public static ResponseEntity<String> entityErrorMessage(BindingResult result){
-           String errorFieldsMsg = result.getFieldErrors().stream()
+    public static ResponseEntity<String> entityErrorMessage(BindingResult result) {
+        String errorFieldsMsg = result.getFieldErrors().stream()
                 .map(fe -> String.format("[%s] %s", fe.getField(), fe.getDefaultMessage()))
                 .collect(Collectors.joining("<br>"));
         return ResponseEntity.unprocessableEntity().body(errorFieldsMsg);

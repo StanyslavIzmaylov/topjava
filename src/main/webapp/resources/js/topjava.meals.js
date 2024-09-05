@@ -26,14 +26,14 @@ $.ajaxSetup({
 
 $(function () {
     $('#startDate').datetimepicker({
-        timepicker:false,
-        format:'Y-m-d'
+        timepicker: false,
+        format: 'Y-m-d'
     });
 });
 $(function () {
     $('#endDate').datetimepicker({
-        timepicker:false,
-        format:'Y-m-d'
+        timepicker: false,
+        format: 'Y-m-d'
     });
 });
 
@@ -52,8 +52,8 @@ $(function () {
 
 $(function () {
     $('#dateTime').datetimepicker({
-        format:'Y-m-d H:i',
-        lang:'ru'
+        format: 'Y-m-d H:i',
+        lang: 'ru'
     });
 });
 
@@ -101,7 +101,7 @@ $(function () {
                 ]
             ],
             "createdRow": function (row, data, dataIndex) {
-                    $(row).attr("data-meal-excess", data.excess);
+                $(row).attr("data-meal-excess", data.excess);
             }
         })
     );

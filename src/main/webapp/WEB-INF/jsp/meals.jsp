@@ -8,7 +8,7 @@
 <script type="text/javascript" src="resources/js/topjava.common.js" defer></script>
 <script type="text/javascript" src="resources/js/topjava.meals.js" defer></script>
 
-<link rel="stylesheet" type="text/css" href="webjars/datetimepicker/2.5.20-1/build/jquery.datetimepicker.min.css" />
+<link rel="stylesheet" type="text/css" href="webjars/datetimepicker/2.5.20-1/build/jquery.datetimepicker.min.css"/>
 <script src="webjars/datetimepicker/2.5.20-1/build/jquery.datetimepicker.full.min.js" defer></script>
 <jsp:include page="fragments/bodyHeader.jsp"/>
 
@@ -81,7 +81,8 @@
                     <input type="hidden" id="id" name="id">
 
                     <div class="form-group">
-                        <label for="dateTime" class="col-form-label" id="dateFormat"><spring:message code="meal.dateTime"/></label>
+                        <label for="dateTime" class="col-form-label" id="dateFormat"><spring:message
+                                code="meal.dateTime"/></label>
                         <input type="text" class="form-control" id="dateTime" name="dateTime"
                                placeholder="<spring:message code="meal.dateTime"/>">
                     </div>
