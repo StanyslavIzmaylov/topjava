@@ -2,10 +2,20 @@ package ru.javawebinar.topjava.util;
 
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.lang.Nullable;
+import org.springframework.validation.BindingResult;
+
+import java.util.stream.Collectors;
 
 public class Util {
 
     private Util() {
+    }
+
+    public static String BindingMessage(BindingResult result){
+           String errorFieldsMsg = result.getFieldErrors().stream()
+                .map(fe -> String.format("[%s] %s", fe.getField(), fe.getDefaultMessage()))
+                .collect(Collectors.joining("<br>"));
+           return errorFieldsMsg;
     }
 
     public static <T extends Comparable<T>> boolean isBetweenHalfOpen(T value, @Nullable T start, @Nullable T end) {

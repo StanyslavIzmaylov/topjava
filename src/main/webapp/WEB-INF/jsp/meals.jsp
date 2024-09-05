@@ -73,7 +73,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="modalTitle"><spring:message code="meal.add"/></h4>
+                <h4 class="modal-title" id="modalTitle"></h4>
                 <button type="button" class="close" data-dismiss="modal" onclick="closeNoty()">&times;</button>
             </div>
             <div class="modal-body">
@@ -114,5 +114,10 @@
 </div>
 <jsp:include page="fragments/footer.jsp"/>
 </body>
-<jsp:include page="fragments/118i.jsp"/>
+<jsp:include page="fragments/i118n.jsp"/>
+<script type="text/javascript">
+    const i18n = {}; // https://learn.javascript.ru/object
+    i18n["addTitle"] = '<spring:message code="meal.add"/>';
+    i18n["editTitle"] = '<spring:message code="meal.edit"/>';
+</script>
 </html>
