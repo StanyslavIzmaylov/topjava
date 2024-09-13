@@ -2,12 +2,10 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
-
 <html>
 <jsp:include page="fragments/headTag.jsp"/>
 <body>
 <jsp:include page="fragments/bodyHeader.jsp"/>
-
 <div class="jumbotron py-0">
     <div class="container">
         <c:if test="${param.error}">
@@ -58,7 +56,7 @@
 </div>
 <jsp:include page="fragments/footer.jsp"/>
 <script type="text/javascript">
-    <c:if test="${not empty param.username}">
+<c:if test="${not empty param.username}">
     setCredentials("${param.username}", "");
     </c:if>
 
@@ -70,6 +68,7 @@
         $('input[name="username"]').val(username);
         $('input[name="password"]').val(password);
     }
+
 </script>
 </body>
 </html>
