@@ -108,10 +108,8 @@ class MealRestControllerTest extends AbstractControllerTest {
                 .with(userHttpBasic(user))
                 .content(JsonUtil.writeValue(updated)))
                 .andDo(print())
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isConflict())
                 .andReturn();
-
-        String content = result.getResponse().getContentAsString();
     }
 
     @Test

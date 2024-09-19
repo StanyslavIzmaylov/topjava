@@ -26,6 +26,6 @@
                 </button>
             </form:form>
         </sec:authorize>
-        <a href="?language=en">En</a>|<a href="?language=ru">Rus</a>
+        <a href='${requestScope['javax.servlet.forward.request_uri']}?locale=en'>En</a>|<a href='${requestScope['javax.servlet.forward.request_uri']}?locale=ru'>Ru</a>
     </div>
 </nav>
