@@ -37,11 +37,12 @@ public class ExceptionInfoHandler {
     @Autowired
     private MessageSourceAccessor messageSourceAccessor;
 
-    private static Map<String, ErrorType> CONSTRAINS_I18N_MAP = Map.of(
+    private final static String EXCEPTION_DUPLICATE_EMAIL = "null";
+    private final static String EXCEPTION_DUPLICATE_DATETIME = "null";
+
+    private static Map<String, String> CONSTRAINS_I18N_MAP = Map.of(
             "users_unique_email_idx", EXCEPTION_DUPLICATE_EMAIL,
             "meal_unique_user_datetime_idx", EXCEPTION_DUPLICATE_DATETIME);
-
-
 
     //  http://stackoverflow.com/a/22358422/548473
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
@@ -56,10 +57,9 @@ public class ExceptionInfoHandler {
         String rootMsg = ValidationUtil.getRootCause(e).getMessage();
         if (rootMsg != null) {
             String lowerCaseMsg = rootMsg.toLowerCase();
-            for (Map.Entry<String, ErrorType> entry : CONSTRAINS_I18N_MAP.entrySet()) {
+            for (Map.Entry<String, String> entry : CONSTRAINS_I18N_MAP.entrySet()) {
                 if (lowerCaseMsg.contains(entry.getKey())) {
-                 return new ErrorInfo(req.getRequestURL(), entry.getValue(), messageSourceAccessor.getMessage(String.valueOf(entry.getValue())));
-
+                 return new ErrorInfo(req.getRequestURL(), VALIDATION_ERROR, messageSourceAccessor.getMessage(entry.getValue()));
                 }
             }
         }
@@ -70,6 +70,9 @@ public class ExceptionInfoHandler {
     @ExceptionHandler({IllegalRequestDataException.class, MethodArgumentTypeMismatchException.class,
             HttpMessageNotReadableException.class, BindException.class})
     public ErrorInfo validationError(HttpServletRequest req, Exception e) {
+        if (e instanceof BindException){
+            return new ErrorInfo(req.getRequestURL(), VALIDATION_ERROR, ValidationUtil.getRootCauseDefaultMessage(((BindException) e)));
+        }
         return logAndGetErrorInfo(req, e, false, VALIDATION_ERROR);
     }
 
@@ -82,12 +85,6 @@ public class ExceptionInfoHandler {
     //    https://stackoverflow.com/questions/538870/should-private-helper-methods-be-static-if-they-can-be-static
     private static ErrorInfo logAndGetErrorInfo(HttpServletRequest req, Exception e, boolean logException, ErrorType errorType) {
         Throwable rootCause = ValidationUtil.getRootCause(e);
-        if (e instanceof BindException){
-            return new ErrorInfo(req.getRequestURL(), errorType, ValidationUtil.getRootCauseDefaultMessage(((BindException) e)));
-        }
-//        if (e instanceof DataIntegrityViolationException){
-//            return new ErrorInfo(req.getRequestURL(), errorType, ValidationUtil.getRootCauseDefaultMessage(((BindException) e)));
-//        }
         if (logException) {
             log.error(errorType + " at request " + req.getRequestURL(), rootCause);
         } else {

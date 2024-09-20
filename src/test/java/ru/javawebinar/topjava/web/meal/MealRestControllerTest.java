@@ -4,24 +4,19 @@ package ru.javawebinar.topjava.web.meal;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BindException;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
-import ru.javawebinar.topjava.util.ValidationUtil;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 import ru.javawebinar.topjava.web.AbstractControllerTest;
 import ru.javawebinar.topjava.web.json.JsonUtil;
 
-import javax.validation.ConstraintViolationException;
-
-import java.time.LocalDateTime;
 import java.time.Month;
 
+import static java.time.LocalDateTime.of;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -89,6 +84,7 @@ class MealRestControllerTest extends AbstractControllerTest {
 
         MEAL_MATCHER.assertMatch(mealService.get(MEAL1_ID, USER_ID), updated);
     }
+
     @Test
     void updateValidation() throws Exception {
         Meal updated = getUpdated();
@@ -102,14 +98,12 @@ class MealRestControllerTest extends AbstractControllerTest {
     @Test
     @Transactional(propagation = Propagation.NEVER)
     void dataTimeDuplicate() throws Exception {
-        Meal updated = getUpdated();
-        updated.setDateTime(LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0));
-        MvcResult result = perform(MockMvcRequestBuilders.put(REST_URL + MEAL1_ID).contentType(MediaType.APPLICATION_JSON)
+        Meal meal = new Meal(MEAL1_ID, of(2020, Month.JANUARY, 30, 20, 0), "Завтрак", 500);
+        perform(MockMvcRequestBuilders.put(REST_URL + MEAL1_ID).contentType(MediaType.APPLICATION_JSON)
                 .with(userHttpBasic(user))
-                .content(JsonUtil.writeValue(updated)))
+                .content(JsonUtil.writeValue(meal)))
                 .andDo(print())
-                .andExpect(status().isConflict())
-                .andReturn();
+                .andExpect(status().isConflict());
     }
 
     @Test
