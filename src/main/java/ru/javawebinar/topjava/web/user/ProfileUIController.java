@@ -49,7 +49,7 @@ public class ProfileUIController extends AbstractUserController {
             try {
                 super.create(userTo);
             } catch (DataIntegrityViolationException e) {
-                result.rejectValue("email", "422", "User with this email already exists");
+                result.rejectValue("email", "common.duplicateEmail");
                 model.addAttribute("register", true);
                 return "profile";
 

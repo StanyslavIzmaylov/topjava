@@ -4,13 +4,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
-import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -37,8 +35,8 @@ public class ExceptionInfoHandler {
     @Autowired
     private MessageSourceAccessor messageSourceAccessor;
 
-    private final static String EXCEPTION_DUPLICATE_EMAIL = "null";
-    private final static String EXCEPTION_DUPLICATE_DATETIME = "null";
+    private final static String EXCEPTION_DUPLICATE_EMAIL = "common.duplicateEmail";
+    private final static String EXCEPTION_DUPLICATE_DATETIME = "common.duplicateDatetime";
 
     private static Map<String, String> CONSTRAINS_I18N_MAP = Map.of(
             "users_unique_email_idx", EXCEPTION_DUPLICATE_EMAIL,
@@ -71,7 +69,7 @@ public class ExceptionInfoHandler {
             HttpMessageNotReadableException.class, BindException.class})
     public ErrorInfo validationError(HttpServletRequest req, Exception e) {
         if (e instanceof BindException){
-            return new ErrorInfo(req.getRequestURL(), VALIDATION_ERROR, ValidationUtil.getRootCauseDefaultMessage(((BindException) e)));
+            return new ErrorInfo(req.getRequestURL(), VALIDATION_ERROR, ValidationUtil.getDefaultMessage(((BindException) e)));
         }
         return logAndGetErrorInfo(req, e, false, VALIDATION_ERROR);
     }

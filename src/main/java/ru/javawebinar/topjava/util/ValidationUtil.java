@@ -2,7 +2,6 @@ package ru.javawebinar.topjava.util;
 
 
 import org.springframework.core.NestedExceptionUtils;
-import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
@@ -78,8 +77,7 @@ public class ValidationUtil {
         return rootCause != null ? rootCause : t;
     }
 
-
-    public static String getRootCauseDefaultMessage(@NonNull BindException bindException) {
+    public static String getDefaultMessage(@NonNull BindException bindException) {
         return  bindException.getFieldErrors().stream()
                 .map(fe -> String.format("[%s] %s", fe.getField(), fe.getDefaultMessage()))
                 .collect(Collectors.joining("<br>"));
