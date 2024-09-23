@@ -89,9 +89,11 @@ class MealRestControllerTest extends AbstractControllerTest {
     void updateValidation() throws Exception {
         Meal updated = getUpdated();
         updated.setCalories(null);
+        updated.setDateTime(null);
         perform(MockMvcRequestBuilders.put(REST_URL + MEAL1_ID).contentType(MediaType.APPLICATION_JSON)
                 .with(userHttpBasic(user))
                 .content(JsonUtil.writeValue(updated)))
+                .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
     }
 

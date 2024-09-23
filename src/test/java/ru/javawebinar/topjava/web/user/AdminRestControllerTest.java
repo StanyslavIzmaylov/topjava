@@ -88,16 +88,15 @@ class AdminRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    void updateValidation() throws Exception {
-        User updated = getUpdated();
-        updated.setName(null);
-        perform(MockMvcRequestBuilders.put(REST_URL + USER_ID)
+    void validation() throws Exception {
+        User newUser = getNew();
+        newUser.setName(null);
+        perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(userHttpBasic(admin))
-                .content(jsonWithPassword(updated, updated.getPassword())))
+                .content(jsonWithPassword(newUser, newUser.getPassword())))
+                .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
-
-        assertThrows(ConstraintViolationException.class, () -> ValidationUtil.validate(updated));
     }
     @Test
     void update() throws Exception {

@@ -68,9 +68,6 @@ public class ExceptionInfoHandler {
     @ExceptionHandler({IllegalRequestDataException.class, MethodArgumentTypeMismatchException.class,
             HttpMessageNotReadableException.class, BindException.class})
     public ErrorInfo validationError(HttpServletRequest req, Exception e) {
-        if (e instanceof BindException){
-            return new ErrorInfo(req.getRequestURL(), VALIDATION_ERROR, ValidationUtil.getDefaultMessage(((BindException) e)));
-        }
         return logAndGetErrorInfo(req, e, false, VALIDATION_ERROR);
     }
 
@@ -82,12 +79,18 @@ public class ExceptionInfoHandler {
 
     //    https://stackoverflow.com/questions/538870/should-private-helper-methods-be-static-if-they-can-be-static
     private static ErrorInfo logAndGetErrorInfo(HttpServletRequest req, Exception e, boolean logException, ErrorType errorType) {
-        Throwable rootCause = ValidationUtil.getRootCause(e);
-        if (logException) {
-            log.error(errorType + " at request " + req.getRequestURL(), rootCause);
-        } else {
-            log.warn("{} at request  {}: {}", errorType, req.getRequestURL(), rootCause.toString());
+        String errorMassage;
+        if (e instanceof BindException){
+            errorMassage = String.valueOf(ValidationUtil.getErrorsMessage(((BindException) e)));
         }
-        return new ErrorInfo(req.getRequestURL(), errorType, rootCause.getMessage());
+        else {
+            errorMassage= String.valueOf(ValidationUtil.getRootCause(e));
+        }
+        if (logException) {
+            log.error(errorType + " at request " + req.getRequestURL(), errorMassage);
+        } else {
+            log.warn("{} at request  {}: {}", errorType, req.getRequestURL(), errorMassage);
+        }
+        return new ErrorInfo(req.getRequestURL(), errorType, errorMassage);
     }
 }
