@@ -23,6 +23,8 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import javax.servlet.http.HttpServletRequest;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import static ru.javawebinar.topjava.util.exception.ErrorType.*;
@@ -46,7 +48,7 @@ public class ExceptionInfoHandler {
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     @ExceptionHandler(NotFoundException.class)
     public ErrorInfo notFoundError(HttpServletRequest req, NotFoundException e) {
-        return logAndGetErrorInfo(req, e, false, DATA_NOT_FOUND);
+        return logAndGetErrorInfo(req, e, false, DATA_NOT_FOUND,Collections.singletonList(e.getMessage()));
     }
 
     @ResponseStatus(HttpStatus.CONFLICT)  // 409
@@ -57,40 +59,37 @@ public class ExceptionInfoHandler {
             String lowerCaseMsg = rootMsg.toLowerCase();
             for (Map.Entry<String, String> entry : CONSTRAINS_I18N_MAP.entrySet()) {
                 if (lowerCaseMsg.contains(entry.getKey())) {
-                 return new ErrorInfo(req.getRequestURL(), VALIDATION_ERROR, messageSourceAccessor.getMessage(entry.getValue()));
+                 return new ErrorInfo(req.getRequestURL(), VALIDATION_ERROR, Collections.singletonList(messageSourceAccessor.getMessage(entry.getValue())));
                 }
             }
         }
-        return logAndGetErrorInfo(req, e,false, DATA_ERROR);
+        return logAndGetErrorInfo(req, e,false, DATA_ERROR,Collections.singletonList(e.getMessage()));
     }
 
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)  // 422
     @ExceptionHandler({IllegalRequestDataException.class, MethodArgumentTypeMismatchException.class,
             HttpMessageNotReadableException.class, BindException.class})
     public ErrorInfo validationError(HttpServletRequest req, Exception e) {
-        return logAndGetErrorInfo(req, e, false, VALIDATION_ERROR);
+        if (e instanceof BindException) {
+            return logAndGetErrorInfo(req, e, false, VALIDATION_ERROR, ValidationUtil.getErrorsMessage((BindException) e));
+        }
+        else return logAndGetErrorInfo(req, e, false, VALIDATION_ERROR,  Collections.singletonList(e.getMessage()));
+
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     public ErrorInfo internalError(HttpServletRequest req, Exception e) {
-        return logAndGetErrorInfo(req, e, true, APP_ERROR);
+        return logAndGetErrorInfo(req, e, true, APP_ERROR, Collections.singletonList(e.getMessage()));
     }
 
     //    https://stackoverflow.com/questions/538870/should-private-helper-methods-be-static-if-they-can-be-static
-    private static ErrorInfo logAndGetErrorInfo(HttpServletRequest req, Exception e, boolean logException, ErrorType errorType) {
-        String errorMassage;
-        if (e instanceof BindException){
-            errorMassage = String.valueOf(ValidationUtil.getErrorsMessage(((BindException) e)));
-        }
-        else {
-            errorMassage= String.valueOf(ValidationUtil.getRootCause(e));
-        }
+    private static ErrorInfo logAndGetErrorInfo(HttpServletRequest req, Exception e, boolean logException, ErrorType errorType, List<String> errors) {
         if (logException) {
-            log.error(errorType + " at request " + req.getRequestURL(), errorMassage);
+            log.error(errorType + " at request " + req.getRequestURL(), errors);
         } else {
-            log.warn("{} at request  {}: {}", errorType, req.getRequestURL(), errorMassage);
+            log.warn("{} at request  {}: {}", errorType, req.getRequestURL(), errors);
         }
-        return new ErrorInfo(req.getRequestURL(), errorType, errorMassage);
+        return new ErrorInfo(req.getRequestURL(), errorType, errors);
     }
 }

@@ -13,6 +13,7 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 import ru.javawebinar.topjava.web.AbstractControllerTest;
 
 import javax.validation.ConstraintViolationException;
+import javax.validation.Valid;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -88,10 +89,10 @@ class AdminRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    void validation() throws Exception {
-        User newUser = getNew();
+    void validationUpdate() throws Exception {
+        User newUser = getUpdated();
         newUser.setName(null);
-        perform(MockMvcRequestBuilders.post(REST_URL)
+        perform(MockMvcRequestBuilders.put(REST_URL + USER_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(userHttpBasic(admin))
                 .content(jsonWithPassword(newUser, newUser.getPassword())))
