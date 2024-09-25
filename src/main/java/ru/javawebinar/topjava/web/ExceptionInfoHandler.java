@@ -22,7 +22,6 @@ import ru.javawebinar.topjava.util.exception.IllegalRequestDataException;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import javax.servlet.http.HttpServletRequest;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +47,7 @@ public class ExceptionInfoHandler {
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     @ExceptionHandler(NotFoundException.class)
     public ErrorInfo notFoundError(HttpServletRequest req, NotFoundException e) {
-        return logAndGetErrorInfo(req, e, false, DATA_NOT_FOUND,Collections.singletonList(e.getMessage()));
+        return logAndGetErrorInfo(req, e, false, DATA_NOT_FOUND, Collections.singletonList(e.getMessage()));
     }
 
     @ResponseStatus(HttpStatus.CONFLICT)  // 409
@@ -59,22 +58,20 @@ public class ExceptionInfoHandler {
             String lowerCaseMsg = rootMsg.toLowerCase();
             for (Map.Entry<String, String> entry : CONSTRAINS_I18N_MAP.entrySet()) {
                 if (lowerCaseMsg.contains(entry.getKey())) {
-                 return new ErrorInfo(req.getRequestURL(), VALIDATION_ERROR, Collections.singletonList(messageSourceAccessor.getMessage(entry.getValue())));
+                    return new ErrorInfo(req.getRequestURL(), VALIDATION_ERROR, Collections.singletonList(messageSourceAccessor.getMessage(entry.getValue())));
                 }
             }
         }
-        return logAndGetErrorInfo(req, e,false, DATA_ERROR,Collections.singletonList(e.getMessage()));
+        return logAndGetErrorInfo(req, e, false, DATA_ERROR, Collections.singletonList(e.getMessage()));
     }
 
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)  // 422
     @ExceptionHandler({IllegalRequestDataException.class, MethodArgumentTypeMismatchException.class,
             HttpMessageNotReadableException.class, BindException.class})
     public ErrorInfo validationError(HttpServletRequest req, Exception e) {
-        if (e instanceof BindException) {
-            return logAndGetErrorInfo(req, e, false, VALIDATION_ERROR, ValidationUtil.getErrorsMessage((BindException) e));
-        }
-        else return logAndGetErrorInfo(req, e, false, VALIDATION_ERROR,  Collections.singletonList(e.getMessage()));
-
+        if (e instanceof BindException bindException) {
+            return logAndGetErrorInfo(req, e, false, VALIDATION_ERROR, ValidationUtil.getErrorsMessage(bindException));
+        } else return logAndGetErrorInfo(req, e, false, VALIDATION_ERROR, Collections.singletonList(e.getMessage()));
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

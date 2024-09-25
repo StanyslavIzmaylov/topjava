@@ -4,7 +4,6 @@ import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.web.json.JsonUtil;
 
-import javax.validation.Valid;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
